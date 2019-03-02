@@ -30,5 +30,14 @@ static String file = "";
   public static void RR(){
     int time  = 2;
   }
+  public static void FCFS(){
+
+  }
+  public static void uni(){
+
+  }
+  public static void short(){
+    
+  }
 
 }
