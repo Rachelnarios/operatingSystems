@@ -5,8 +5,8 @@ A simulation lab in which we see how the time required depends on scheduling alg
 * Reads the input from a file given in command line
 * Send outputs by printing them
 * Accept a verbose flag which if present precede the file name. This will produce a detailed output
-* <program-name> <input-filename>
-* <program-name> --verbose <input-filename>
+* program-name input-filename
+* program-name --verbose input-filename
 ### Background
 A process id characterized by four non negative integers A , B, C, IO.
 A process execution consists of computation alternating with I0, These will be referred as CPU bursts and IO bursts
@@ -50,3 +50,4 @@ Keep track of the state of each process (ready, running, block) and advance time
 Reads a random non negative integer X from a file named "random-numbers" in the current directory and returns the value 1 + (X mod U)
 
 ### Breaking ties
+TBD
