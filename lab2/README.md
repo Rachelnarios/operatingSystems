@@ -7,6 +7,7 @@ A simulation lab in which we see how the time required depends on scheduling alg
 * Accept a verbose flag which if present precede the file name. This will produce a detailed output
 * program-name input-filename
 * program-name --verbose input-filename
+
 ### Background
 A process id characterized by four non negative integers A , B, C, IO.
 A process execution consists of computation alternating with I0, These will be referred as CPU bursts and IO bursts
