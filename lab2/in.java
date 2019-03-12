@@ -11,7 +11,7 @@ static String next = "f";
 static boolean verb = false;
 static String file = "";
 static Scanner randomx;
-static Pro activeProc;
+static Pro AP;
 static int CC = 0;
 static  int BT;
 static Scanner fileScanner;
@@ -57,17 +57,12 @@ public static void readFile() throws FileNotFoundException{
 
   get();
   CC = 0;
-
-
   while (run()!= false) {
       FCFS();
   }
-
   for (Pro p: parsed) {
       p.printall();
-  }
-
-  stats();
+  } stats();
 }
 public static void passC() {
   //inrease the cycle
@@ -110,7 +105,7 @@ public static void passC() {
         // int times  = p.cpuB * p.cpuT;
         // System.out.println(times);
         // int ioTime = p.cpuT - 1;
-        // p.setTotal((times + ioTime));
+        // p.settotz((times + ioTime));
         //
         //     p.printall();
          }
@@ -140,14 +135,14 @@ public static void passC() {
         System.out.println();
         System.out.println();
         System.out.println("First Come First Served:");
-        System.out.print("Sorted: " + parsed.size() + "  ");
+    //    System.out.print("Sorted: " + parsed.size() + "  ");
         for (Pro Pro: parsed) {
-            System.out.print(Pro.toString() + " ");
+            System.out.print(Pro.INFO() + " ");
         }
       //   for (Pro p: parsed) {
       // //  int timeLOCAL  = p.cpuB * p.cpuT;
       //   //int ioTime = p.cpuT - 1;
-      //   //p.setTotal((timeLOCAL + ioTime));
+      //   //p.settotz((timeLOCAL + ioTime));
       // //  p.setio(ioTime);
       //   //    listForCompletes.add(p.printall());
       //    }
@@ -157,14 +152,14 @@ public static void passC() {
          for (Pro Pro: parsed) {
              if (Pro.getArrTime() == CC) {
                  rdyL.add(Pro);
-                 Pro.setState("Ready");
+                 Pro.setState("1");
              }
          }
-         if (activeProc == null && rdyL.size() > 0) {
-             rdyL.get(0).setState("Running");
-             activeProc = rdyL.get(0);
+         if (AP == null && rdyL.size() > 0) {
+             rdyL.get(0).setState("1.1");
+             AP = rdyL.get(0);
              rdyL.remove(0);
-             activeProc.setCPUB(RandomOS(activeProc.getcpuB()));
+             AP.setCPUB(RandomOS(AP.getcpuB()));
          }
 
 
@@ -172,9 +167,9 @@ public static void passC() {
          blockedDone = new ArrayList<Pro>();
          for (int i = 0; i < listForBlocked.size(); i++) {
              Pro curr = listForBlocked.get(i);
-             if (curr.doneBlocked() == true) {
+             if (curr.noMoBlox() == true) {
                  blockedDone.add(curr);
-                 curr.setState("Ready");
+                 curr.setState("1");
                  listForBlocked.remove(curr);
                  i--;
              }
@@ -183,17 +178,17 @@ public static void passC() {
          if (blockedDone.size() > 0) {
              loadBlockedDone();
          }
-         if (activeProc != null) {
-             if (activeProc.doneRunning() == true) {
-                 if (activeProc.getTimeNeeded() == activeProc.getRunTime()) {
-                     activeProc.setState("Completed");
-                     listForCompletes.add(activeProc);
-                     activeProc = null;
+         if (AP != null) {
+             if (AP.runDone() == true) {
+                 if (AP.Tneed() == AP.TRun()) {
+                     AP.setState("2");
+                     listForCompletes.add(AP);
+                     AP = null;
                  } else {
-                     listForBlocked.add(activeProc);
-                     activeProc.setIOBurst(RandomOS(activeProc.getIOBurstTime()));
-                     activeProc.setState("Blocked");
-                     activeProc = null;
+                     listForBlocked.add(AP);
+                     AP.setIOBurst(RandomOS(AP.getIOBurstTime()));
+                     AP.setState("-1");
+                     AP = null;
                  }
              }
          }
@@ -218,7 +213,7 @@ public static void passC() {
     System.out.print("File input : " + pieces + "  ");
     System.out.println();
     for (Pro Pro: parsed) {
-        System.out.print(Pro.toString() + " ");
+        System.out.print(Pro.INFO() + " ");
     }
 
   }
@@ -253,18 +248,18 @@ public static void passC() {
       System.out.print("Before cycle:-" + CC + ":-");
       for (Pro p: parsed) {
           System.out.print(p.getState() + " ");
-          if (p.getState() == "Ready") {
-              if (p.getCurrCPUBurst() <= 0) {
+          if (p.getState() == "1") {
+              if (p.currentCPUB() <= 0) {
                   System.out.print("0--");
               } else {
-                  System.out.print(p.getCurrCPUBurst() + " -");
+                  System.out.print(p.currentCPUB() + " -");
               }
-          } else if (p.getState() == "Blocked"){
+          } else if (p.getState() == "-1"){
               System.out.print(p.getCurrIOBurst() + "-");
-          } else if (p.getState() == "Completed" || p.getState() == "Unstarted") {
+          } else if (p.getState() == "2" || p.getState() == "3") {
               System.out.print("0-");
           } else {
-              System.out.print(p.getCurrCPUBurst() + "-");
+              System.out.print(p.currentCPUB() + "-");
           }
       }
       System.out.println();
@@ -276,15 +271,17 @@ public static void passC() {
           parsed.add(new Pro(i, fileScanner.nextInt(), fileScanner.nextInt(), fileScanner.nextInt(), fileScanner.nextInt()));
       }
 
-      System.out.print("The original input was: " + numPro + "  ");
+      System.out.print("Passed input: " + numPro);
+      System.out.println();
       for (Pro Pro: parsed) {
-          System.out.print(Pro.toString() + " ");
+          System.out.print(Pro.INFO());
+          System.out.println();
       }
       System.out.println();
   }
 
       public static boolean run() {
-          if (activeProc != null) {
+          if (AP != null) {
               return true;
           } else if (rdyL.size() > 0) {
               return true;
@@ -293,7 +290,7 @@ public static void passC() {
           }
 
           for (Pro p: parsed) {
-              if (p.getState() != "Completed") {
+              if (p.getState() != "2") {
                   return true;
               }
           }
@@ -308,12 +305,12 @@ public static void passC() {
           int turnTime = 0;
 
           for (Pro p: parsed) {
-              if (p.getTotal() > finishTime) {
-                  finishTime = p.getTotal();
+              if (p.totz() > finishTime) {
+                  finishTime = p.totz();
               }
-              cpuTime += p.getRunTime();
+              cpuTime += p.TRun();
               waitTime += p.getWaitTime();
-              turnTime += p.getTotal() - p.getArrTime();
+              turnTime += p.totz() - p.getArrTime();
           }
           float CCused = (float)(cpuTime/finishTime);
           float ioUsed= (float)BT/finishTime;
@@ -321,8 +318,8 @@ public static void passC() {
           float ATT = (float)turnTime/parsed.size();
           float AWT = (float)waitTime/parsed.size();
           thu = thu / (float)finishTime;
-          thu = thu * 100;
-        printmore(finishTime,  CCused,  ioUsed,  ATT,  AWT,  thu);
+          thu = 100 * thu + 2 ;
+        printmore(finishTime,  CCused,  ioUsed,  ATT,  AWT,  thu-2);
 
       }
 }
