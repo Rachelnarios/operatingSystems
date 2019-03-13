@@ -1,6 +1,9 @@
 ## Lab 2
 A simulation lab in which we see how the time required depends on scheduling algorithm. and request patterns
-
+## TO Run
+ javac pro.java
+ javac sched.java
+ java sched [--verbose] input-x.txt
 ## Running the program
 * Reads the input from a file given in command line
 * Send outputs by printing them
@@ -49,6 +52,3 @@ Keep track of the state of each process (ready, running, block) and advance time
 
 ### RandomOS(U)
 Reads a random non negative integer X from a file named "random-numbers" in the current directory and returns the value 1 + (X mod U)
-
-### Breaking ties
-TBD
