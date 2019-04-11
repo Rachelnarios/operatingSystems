@@ -32,21 +32,43 @@ public static void main(String[] args) throws IOException {
 
 public static void optimistic(int taskNumber, int resourceType, int units, ArrayList <String> objMods){
   int cycle = 0;
+  int available = units;
   ArrayList<Integer> pending = new ArrayList<Integer>(); //
   //ArrayList<Integer> initiated = new ArrayList<Integer>(); //Sources that claim something
   ArrayList<String> initiated = new ArrayList<String>(); //Sources that claim something
   ArrayList<String> requests = new ArrayList<String>(); //Sources that claim something
+  ArrayList<String> release = new ArrayList<String>(); //Sources that claim something
 
-  //Read initiate requests
+  //Read initiate requests cycle 0
    for (int i = 0; i < objMods.size(); i++) {
      if(objMods.get(i).startsWith("initiate")){
-       initiated.add(objMods.get(i).substring(9));
+       initiated.add(objMods.get(i).substring(8));
      }
      if(objMods.get(i).startsWith("request")){
-       request.add(objMods.get(i).substring(9));
+       requests.add(objMods.get(i).substring(8));
      }
-     
+     if(objMods.get(i).startsWith("release")){
+       release.add(objMods.get(i).substring(8));
+     }
    }
+  cycle += 1;
+   //cycle 1
+   System.out.println("Cycle "+ cycle + "-"+ (cycle+1));
+   for (int i = 0; i < requests.size(); i++) {
+     if(Character.getNumericValue(requests.get(i).charAt(6)) < available){
+       System.out.println("Task "+requests.get(i).charAt(0)+" Requested: "+ requests.get(i).charAt(6) + " GRANTED! " );
+       available = available - Character.getNumericValue(requests.get(i).charAt(6));
+       System.out.println("Items available: " + available);
+     }else{
+       System.out.println("Task "+requests.get(i).charAt(0)+" Requested: "+ requests.get(i).charAt(6) + " IT WAS NOT GRANTED! " );
+
+     }
+   }
+   System.out.println(requests);
+   cycle += 1;
+   // System.out.println("During 0-1 each task completes its initiate");
+   // System.out.println("During " + cycle +"-" +(cycle+1));
+   // System.out.println(requests);
   //Is it opssible
   //If not -> wait
   //If yes gud
