@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.ArrayList; // import the ArrayList class
 
 public class bank {
 static int a = 0;
@@ -16,7 +17,7 @@ static int resourceUnits = 0;
 public static void main(String[] args) throws IOException {
   try{
     red();
-    printFinal();
+//    printFinal();
   }
   finally{
 
@@ -29,13 +30,35 @@ public static void main(String[] args) throws IOException {
 // satisfy pending requests in a fifo manenr
 //in a fifo manner
 
-public static void optimistic(int taskNumber, int resourceType, int units){
-  int time = 0;
-  //Read Request
+public static void optimistic(int taskNumber, int resourceType, int units, ArrayList <String> objMods){
+  int cycle = 0;
+  ArrayList<Integer> pending = new ArrayList<Integer>(); //
+  //ArrayList<Integer> initiated = new ArrayList<Integer>(); //Sources that claim something
+  ArrayList<String> initiated = new ArrayList<String>(); //Sources that claim something
+  ArrayList<String> requests = new ArrayList<String>(); //Sources that claim something
+
+  //Read initiate requests
+   for (int i = 0; i < objMods.size(); i++) {
+     if(objMods.get(i).startsWith("initiate")){
+       initiated.add(objMods.get(i).substring(9));
+     }
+     if(objMods.get(i).startsWith("request")){
+       request.add(objMods.get(i).substring(9));
+     }
+     
+   }
   //Is it opssible
   //If not -> wait
   //If yes gud
   //Else put it ina FIFO ququeuue and when a releease occurs staisfy in a Fifo manner
+
+
+//Print out data
+  System.out.println("~FIFO~");
+  for(int i = 1; i <taskNumber+1; i++){
+    System.out.println("Task "+ i + ":");
+  }
+  System.out.println("Total:" + "\n");
 
 }
 
@@ -51,6 +74,7 @@ public static void red() throws IOException {
       //System.out.println("hello");
         StringBuilder sb = new StringBuilder();
         String line = br.readLine();
+        ArrayList<String> mods = new ArrayList<String>();
          taskNum = Character.getNumericValue((line.charAt(0)));
          resourceT = Character.getNumericValue((line.charAt(2)));
          resourceUnits = Character.getNumericValue((line.charAt(4)));
@@ -63,13 +87,15 @@ public static void red() throws IOException {
             sb.append(line);
             sb.append(System.lineSeparator());
             line = br.readLine();
-            System.out.println(line);
-            //Last line to print is null
-        }
-        String everything = sb.toString();
+            mods.add(line);
+      }
+      mods.remove(mods.size() - 1);
+      //System.out.println(mods);
+      optimistic(taskNum,resourceT,resourceUnits,mods);
     } finally {
         br.close();
     }
+
 }
 
 public static void printFinal(){
