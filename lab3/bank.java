@@ -23,6 +23,25 @@ public static void main(String[] args) throws IOException {
   }
 }
 
+//Goal of lab is to do recource allocation using both an optimistic
+//Resource manager and the bankers algo
+//Optimistic is simple, satisfy a request if not make it wait when a realese pccirs
+// satisfy pending requests in a fifo manenr
+//in a fifo manner
+
+public static void optimistic(int taskNumber, int resourceType, int units){
+  int time = 0;
+  //Read Request
+  //Is it opssible
+  //If not -> wait
+  //If yes gud
+  //Else put it ina FIFO ququeuue and when a releease occurs staisfy in a Fifo manner
+
+}
+
+public static void banker(){
+
+}
 public static void red() throws IOException {
     //int bankIn = new int [3];
   //The first line asserts that this run has 2 tasks and 1 resource type with 4 units.
