@@ -52,12 +52,15 @@ public static void optimistic(int taskNumber, int resourceType, int units, Array
      }
    }
   cycle += 1;
-   //cycle 1
+   //cycle 1 requests
    System.out.println("Cycle "+ cycle + "-"+ (cycle+1));
    for (int i = 0; i < requests.size(); i++) {
      if(Character.getNumericValue(requests.get(i).charAt(6)) < available){
        System.out.println("Task "+requests.get(i).charAt(0)+" Requested: "+ requests.get(i).charAt(6) + " GRANTED! " );
+
        available = available - Character.getNumericValue(requests.get(i).charAt(6));
+       requests.set(i,"x");
+
        System.out.println("Items available: " + available);
      }else{
        System.out.println("Task "+requests.get(i).charAt(0)+" Requested: "+ requests.get(i).charAt(6) + " IT WAS NOT GRANTED! " );
@@ -66,6 +69,38 @@ public static void optimistic(int taskNumber, int resourceType, int units, Array
    }
    System.out.println(requests);
    cycle += 1;
+
+   //releases
+   System.out.println("Cycle "+ cycle + "-"+ (cycle+1));
+   for (int i = 0; i < release.size(); i++) {
+       System.out.println("Task "+requests.get(i).charAt(0)+" Released: "+ release.get(i).charAt(6) );
+       available = available + Character.getNumericValue(release.get(i).charAt(6));
+       System.out.println("Items available: " + available);
+
+   }
+  // System.out.println(requests);
+   cycle += 1;
+
+   //terminates
+
+   System.out.println("Cycle "+ cycle + "-"+ (cycle+1));
+   for (int j = 0; j < taskNumber; j++) {
+
+      int pass = 9;
+      for (int i = 0; i < requests.size(); i++) {
+
+      if(Character.getNumericValue(requests.get(i).charAt(0)) == (j+1)){
+         pass = -1;
+         break;
+       }
+   }
+   if(pass == 9){
+     System.out.println("Task "+ (j+1) + " terminated");
+   }
+ }
+//   System.out.println(requests);
+   cycle += 1;
+
    // System.out.println("During 0-1 each task completes its initiate");
    // System.out.println("During " + cycle +"-" +(cycle+1));
    // System.out.println(requests);
