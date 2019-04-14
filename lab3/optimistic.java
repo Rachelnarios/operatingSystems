@@ -73,7 +73,7 @@ public class optimistic {
         //get line current
         ArrayList<Input> current = instructions.get(i);
 
-  if (tasks.get(i).end == true || blocked.contains(tasks.get(i))){
+  if (tasks.get(i).end == 1 || blocked.contains(tasks.get(i))){
 					continue; }
 
     if (current.get(0).delay > 0){
@@ -104,7 +104,7 @@ public class optimistic {
   if (current.get(0).activity.equals("terminate")){
 
     if(current.get(0).delay == 0){
-      tasks.get(i).end = true;
+      tasks.get(i).end = 1;
       remaningCopy += 1;
       tasks.get(i).finish = cycle + 1;
       for (int n = 0; n < tasks.get(i).res_array.length; n++){
@@ -119,14 +119,53 @@ public class optimistic {
   }
 }
 deadlockCheck();
+releasedResources();
+removeblocked();
+remaning -= remaningCopy;
+remaningCopy = 0;
+waitCheck = 0;
+cycle++;
 return true;
 }
 
 //Check for deadlock
 public void deadlockCheck(){
+			while (waitCheck == remaning && remaning != 0){
+        //start aborting tasks
+        for(int i = 0; i < instructions.size(); i++){
+          if(tasks.get(i).end == 0){
+            tasks.get(i).end = 1;
+            remaning -= 1;
+           tasks.get(i).finish = -1;
+           free(i);
+           break;
+          }
+        }
 
+
+      }
 }
-
+public void free(int k){
+  for (int i = 0; i < tasks.get(i).res_array.length; i++){
+    res_array[i] += tasks.get(k).res_array[i];
+    tasks.get(k).res_array[i] = 0;
+  }
+  blocked.remove(tasks.get(k));
+}
+public void releasedResources(){
+  for (int i = 0; i < res_array.length; i++){
+    res_array[i] += released[i];
+    released[i] = 0;
+  }
+}
+public void removeblocked(){
+  if (position.size() > 0){
+    for (int i = 0; i < position.size(); i++){
+      blocked.remove(tasks.get(position.get(i)).TeaNumber-1);
+      position.remove(i);
+    }
+  }
+}
 public void printOP(){
 	System.out.println("~FIFO~");
   int time_finished = 0;

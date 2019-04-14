@@ -1,6 +1,6 @@
 public class Tea {
 	//Tea = task executed at
-  boolean end = false;
+  int end = 0;
 	int TeaNumber;
 	int waitTime = 0;
 	int[] res_array;
