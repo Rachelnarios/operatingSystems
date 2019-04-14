@@ -51,7 +51,7 @@ public class lab3 {
   				int delay = input.nextInt();
   				int resourceType = input.nextInt();
 					int trash = input.nextInt();
-  				actions.get(tasknum-1).add(new Input(activity, tasknum, delay, resourceType));
+  				actions.get(tasknum-1).add(new Input(activity, tasknum, delay, resourceType,trash));
   			}
         //OPRM = optimistic resource manager
   			optimistic OPRM = new optimistic(actions, avail);

@@ -1,14 +1,17 @@
 public class Input {
 	String activity;
-	int wat;
 	int taskNumber;
-	int delay; //?? Ask
+	int delay; 
 	int resourceType;
-	public Input(String activity, int task, int delayit, int resourceT){
+	int var;
+	int wat;
+
+	public Input(String activity, int task, int delayx, int resType, int variant){
 		this.activity = activity;
-		this.taskNumber = task;
-		this.delay = delayit;
-		this.resourceType = resourceT;
+		taskNumber = task;
+		delay = delayx;
+		resourceType = resType;
+		var = variant;
 	}
 
 }
