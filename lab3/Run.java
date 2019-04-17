@@ -44,7 +44,7 @@ int remainingBA;
       blockTasksBN();
       break;
     }
-    printBanker();
+   //printBanker();
   }
   public void runOP(){
     //Driver method start by seeing remaining tasks
@@ -257,59 +257,27 @@ int remainingBA;
         }
 
         public void printOP(){
-          System.out.println(" ");
+          System.out.println("");
           System.out.println("⚬ FIFO ⚬");
-          int finalFinishingTime = 0;
-          int totalWaiting = 0;
-          //HMMMM bad idea using string builder check
-          StringBuilder result = new StringBuilder("");
-          StringBuilder total = new StringBuilder("");
-
-          for (int ii = 0; ii < tasks.size(); ii++){
-            if (tasks.get(ii).finish < 0){
-              result.append("Task: ");
-              result.append(" | ");
-              result.append(ii+1);
-              result.append(" | ");
-              result.append("%");
-              System.out.println(result);
-              result.setLength(0);
-            }
-            else{
-              finalFinishingTime += tasks.get(ii).finish;
-              totalWaiting += tasks.get(ii).waitTime;
-              result.append("Task: ");
-              result.append(ii+1);
-              result.append(" | ");
-              result.append(tasks.get(ii).finish );
-              result.append(" | ");
-              result.append(tasks.get(ii).waitTime );
-              result.append(" | ");
-              result.append(((((float)tasks.get(ii).waitTime/tasks.get(ii).finish))*100));
-              result.append("%");
-              System.out.println(result);
-              result.setLength(0);
-
-            }
-          }
-          // /System.out.println("hello");
-          total.append("Totals");
-          total.append(" \t ");
-          total.append(" ");
-          total.append(" | ");
-          total.append(finalFinishingTime);
-          total.append(" | ");
-          total.append(totalWaiting);
-          total.append(" | ");
-          total.append((((float)totalWaiting/finalFinishingTime)*100));
-          total.append( "%");
-          System.out.println(total);
+      		int TF = 0;
+      		int TW = 0;
+      		for (int ii = 0; ii < tasks.size(); ii++){
+      			if (tasks.get(ii).finish < 0){
+      				System.out.println("Task " +(ii+1)+ " ABORTED :( " );
+      			}
+      			else{
+      				TF += tasks.get(ii).finish;
+      				TW += tasks.get(ii).waitTime;
+      				System.out.println("Task " + (ii+1) + " | " + tasks.get(ii).finish + " | " + tasks.get(ii).waitTime + " | " + Math.round((((float)tasks.get(ii).waitTime/tasks.get(ii).finish))*100) + "%");
+      			}
+      		}
+      		System.out.println("Totals | " + TF + " | " + TW + " | " + Math.round(((float)TW/TF)*100) + "%");
           System.out.println(" ");
+          System.out.println("==========================");
+          System.out.println("");
 
-        }
-        public void printBanker(){
-          System.out.println(" ");
-          System.out.println("=================");      	}
+           	}
+
 
 
       }

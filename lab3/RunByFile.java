@@ -6,17 +6,18 @@ import java.io.*;
 import java.util.ArrayList;
 
 
-public class lab3 {
+public class RunByFile {
 
   ArrayList<Integer> pending = new ArrayList<Integer>(); //
   //ArrayList<Integer> initiated = new ArrayList<Integer>(); //Sources that claim something
   ArrayList<String> initiated = new ArrayList<String>(); //Sources that claim something
   ArrayList<String> requests = new ArrayList<String>(); //Sources that claim something
-  ArrayList<String> release = new ArrayList<String>(); //Sources that claim something
+  ArrayList<String> release = new ArrayList<String>();
 	ArrayList<Tea> tasks = new ArrayList<Tea>();
 	ArrayList<Tea> blocked = new ArrayList<Tea>();
 	ArrayList<Integer> at = new ArrayList<Integer>();
 	ArrayList<ArrayList<Input>> instructions;
+  ArrayList<ArrayList<InputBA>> instructionsBA;
 
 	int[] resources;
 	int[] releases;
@@ -37,11 +38,11 @@ public class lab3 {
 				int resource_Type = input.nextInt(); //1
 				int[] avail = new int[resource_Type]; //4
 				ArrayList<ArrayList<Input>> actionsOP = new ArrayList<ArrayList<Input>>(); //actions given by file
-        ArrayList<ArrayList<Input>> actionsBA = new ArrayList<ArrayList<Input>>();
+        ArrayList<ArrayList<InputBA>> actionsBA = new ArrayList<ArrayList<InputBA>>();
 
   			for (int i = 0; i < task_number; i++){
   				actionsOP.add(new ArrayList<Input>());
-          actionsBA.add(new ArrayList<Input>());
+          actionsBA.add(new ArrayList<InputBA>());
 
   			}
 				for (int i = 0; i < resource_Type; i++){
@@ -55,7 +56,7 @@ public class lab3 {
   				int resourceType = input.nextInt();
 					int trash = input.nextInt();
   				actionsOP.get(tasknum-1).add(new Input(activity, tasknum, delay, resourceType,trash));
-          actionsBA.get(tasknum-1).add(new Input(activity, tasknum, delay, resourceType,trash));
+          actionsBA.get(tasknum-1).add(new InputBA(activity, tasknum, delay, resourceType,trash));
 
   			}
         input.close();
@@ -65,9 +66,9 @@ public class lab3 {
         //Banker
         // //Out of bounds exception? Separete class?
         // Run bankerAlgorithm = new Run(actionsBA, avail);
-        // bankerAlgorithm.BankerMain();
+        // bankerAlgorithm.runBank();
 			Banker bankerAlgorithm = new Banker(actionsBA, avail);
-			bankerAlgorithm.BankerMain();
+			bankerAlgorithm.runBank();
   		}
   		catch(FileNotFoundException e){
         System.out.println("file was not found :( ");

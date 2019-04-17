@@ -4,7 +4,7 @@ public class Banker {
   ArrayList<Tea> tasksBA = new ArrayList<Tea>();
   ArrayList<Tea> blockedBA = new ArrayList<Tea>();
   ArrayList<Integer> positionBA = new ArrayList<Integer>();
-	ArrayList<ArrayList<Input>> instructionsBA;
+	ArrayList<ArrayList<InputBA>> instructionsBA;
 	int[] resourcesBA;
 	int[] releasedBA;
 	int cycleBA = 0;
@@ -12,7 +12,7 @@ public class Banker {
 	int remainingCopyBA = 0;
 
 
-	public Banker(ArrayList<ArrayList<Input>> instruct, int[] recli){
+	public Banker(ArrayList<ArrayList<InputBA>> instruct, int[] recli){
 		instructionsBA = instruct;
 		resourcesBA = recli;
 		remainingBA = instruct.size();
@@ -20,15 +20,28 @@ public class Banker {
     initiate(instruct);
 	}
 
-public void initiate(ArrayList<ArrayList<Input>> instruct){
+public void initiate(ArrayList<ArrayList<InputBA>> instruct){
   for (int i = 0; i < instruct.size(); i++){
     tasksBA.add(new Tea(i+1, resourcesBA.length));
   }
 }
-
+// public int greedyCheck(int in){
+//   int s = -1;
+//   for(int c = 0; c < arguments.get(in).size(); c++){
+//     //hello
+//     if(res_array[c] > blocked.get(c).claims[c] ){
+//       //unsafe claims too much make 'em' wait
+//       //Positive number means true
+//       s = 2;
+//       System.out.println(s);
+//       return s;
+//     }
+//   }
+//   return s;
+// }
   public void safer(){
     for (int p = 0; p < blockedBA.size(); p++){
-      Input currentInstruction = instructionsBA.get(blockedBA.get(p).numberBA-1).get(0);
+      InputBA currentInstruction = instructionsBA.get(blockedBA.get(p).numberBA-1).get(0);
       int taskIndex = blockedBA.get(p).numberBA-1;
       boolean unsafe = false;
 
@@ -36,7 +49,7 @@ public void initiate(ArrayList<ArrayList<Input>> instruct){
       for (int m = 0; m < instructionsBA.get(taskIndex).size(); m++){
         if (instructionsBA.get(taskIndex).get(m).activity.equals("request")){
           int max = tasksBA.get(taskIndex).claimsBA[instructionsBA.get(taskIndex).get(m).resourceType-1] - tasksBA.get(taskIndex).resourcesBA[instructionsBA.get(taskIndex).get(m).resourceType-1];
-          if (max > resourcesBA[instructionsBA.get(taskIndex).get(m).resourceType-1]){ 
+          if (max > resourcesBA[instructionsBA.get(taskIndex).get(m).resourceType-1]){
             unsafe = true;
             break;
           }
@@ -66,8 +79,9 @@ public void initiate(ArrayList<ArrayList<Input>> instruct){
 
 public void allTask(){
   //now goe through all tasksks same as ORM but with a tweak
+  //now goe through all tasksks same as ORM but with a tweak
 for (int i = 0; i < instructionsBA.size(); i++){
-  ArrayList<Input> currentTask = instructionsBA.get(i);
+  ArrayList<InputBA> currentTask = instructionsBA.get(i);
   if (tasksBA.get(i).endBA == true || blockedBA.contains(tasksBA.get(i))){
     continue;
   }
@@ -164,7 +178,7 @@ public void removeblocked(){
 
 }
 
-	public void BankerMain(){
+	public void runBank(){
 		while(remainingBA != 0){
 		    safer();
         allTask();
@@ -178,6 +192,7 @@ public void removeblocked(){
   }
 
 public void printBA(){
+  System.out.println("");
   System.out.println("△ Banker's Algorithm △");
   int finalFinishingTime = 0;
   int finalWaitingTime = 0;
@@ -188,10 +203,13 @@ public void printBA(){
     else{
       finalFinishingTime += tasksBA.get(ii).finishBA;
       finalWaitingTime += tasksBA.get(ii).waitBA;
-      System.out.println("Task " + (ii+1) + " | " + tasksBA.get(ii).finishBA + " | " + tasksBA.get(ii).waitBA + " | " + (((float)tasksBA.get(ii).waitBA/tasksBA.get(ii).finishBA)*100) + "%");
+      // int math = (float)finalWaitingTime/finalFinishingTime)*100;
+
+      System.out.println("Task " + (ii+1) + " | " + tasksBA.get(ii).finishBA + " | " + tasksBA.get(ii).waitBA + " | " + Math.round((((float)tasksBA.get(ii).waitBA/tasksBA.get(ii).finishBA)*100)) + "%");
     }
   }
-  System.out.println("Totals" + "   | " +finalFinishingTime + " | " + finalWaitingTime + " | " + ((float)finalWaitingTime/finalFinishingTime)*100 + "%");
+  System.out.println("Totals" + "   | " +finalFinishingTime + " | " + finalWaitingTime + " | " + Math.round(((float)finalWaitingTime/finalFinishingTime)*100) + "%");
+  System.out.println("");
 
 }
 

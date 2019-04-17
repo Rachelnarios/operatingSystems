@@ -1,2 +1,2 @@
-javac lab3.java
-java lab3 <filename>
+javac RunByFile.java
+java RunByFile <filename>
