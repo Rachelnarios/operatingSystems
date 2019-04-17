@@ -93,6 +93,13 @@ for (int i = 0; i < instructionsBA.size(); i++){
   else if (currentTask.get(0).activity.equals("initiate")){
     //abort!
     if (resourcesBA[currentTask.get(0).resourceType-1] < currentTask.get(0).var){
+      System.out.println("Bankers Algo: During cycle "+cycleBA+ " - "+ (cycleBA+1));
+      System.out.print("Banker aborts task " + (i+1 ));
+      System.out.print( " its claims " + currentTask.get(0).var );
+      System.out.print(  " for resource " + currentTask.get(0).resourceType);
+     System.out.print( " exceeds number avail of " + resourcesBA[currentTask.get(0).resourceType-1] );
+     System.out.println( "");
+
       tasksBA.get(i).endBA = true;
       remainingBA -=1;
       tasksBA.get(i).finishBA = -1;
@@ -109,7 +116,12 @@ for (int i = 0; i < instructionsBA.size(); i++){
     int exceedClaimCheck = tasksBA.get(i).resourcesBA[currentTask.get(0).resourceType-1] + currentTask.get(0).var;
 
     if (exceedClaimCheck > tasksBA.get(i).claimsBA[currentTask.get(0).resourceType-1]){
-      System.out.println("\tTask exceeds its claim");
+      System.out.println("Bankers Algo: During cycle "+cycleBA+ " - "+ (cycleBA+1));
+      System.out.print("Banker aborts task " + (i+1 ));
+      System.out.print( " its claims " + currentTask.get(0).var );
+      System.out.print(  " for resource " + currentTask.get(0).resourceType);
+     System.out.print( " exceeds number avail of " + resourcesBA[currentTask.get(0).resourceType-1] );
+     System.out.println( "");
       tasksBA.get(i).endBA = true;
       remainingCopyBA += 1;
       tasksBA.get(i).finishBA = -1;
