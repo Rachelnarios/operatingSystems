@@ -37,7 +37,7 @@ public class lab3 {
 				int resource_Type = input.nextInt(); //1
 				int[] avail = new int[resource_Type]; //4
 				ArrayList<ArrayList<Input>> actionsOP = new ArrayList<ArrayList<Input>>(); //actions given by file
-        ArrayList<ArrayList<Input>> actionsBA = new ArrayList<ArrayList<Input>>(); //actions given by file
+        ArrayList<ArrayList<Input>> actionsBA = new ArrayList<ArrayList<Input>>();
 
   			for (int i = 0; i < task_number; i++){
   				actionsOP.add(new ArrayList<Input>());
@@ -58,12 +58,16 @@ public class lab3 {
           actionsBA.get(tasknum-1).add(new Input(activity, tasknum, delay, resourceType,trash));
 
   			}
+        input.close();
         //OPRM = optimistic resource manager
   			Run OPRM = new Run(actionsOP, avail);
   			OPRM.runOP();
         //Banker
-        Run Banker = new Run(actionsBA, avail);
-        Banker.runBanker();
+        // //Out of bounds exception? Separete class?
+        // Run bankerAlgorithm = new Run(actionsBA, avail);
+        // bankerAlgorithm.BankerMain();
+			Banker bankerAlgorithm = new Banker(actionsBA, avail);
+			bankerAlgorithm.BankerMain();
   		}
   		catch(FileNotFoundException e){
         System.out.println("file was not found :( ");

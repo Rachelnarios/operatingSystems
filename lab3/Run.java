@@ -1,26 +1,41 @@
 import java.util.ArrayList;
 //ERROR ABORTED TASKS DOUBLE CHECKK
 public class Run {
+//optimistic
+ArrayList<Tea> tasks = new ArrayList<Tea>();
+ArrayList<Tea> blocked = new ArrayList<Tea>();
+ArrayList<Integer> position = new ArrayList<Integer>();
+ArrayList<ArrayList<Input>> arguments;
+ArrayList<Integer> resource2 = new ArrayList<Integer>();
+int[] res_array;
+int[] released;
+int cycle = 0;
+int remaning;
+int remaningCopy = 0;
+int checkWtime = 0;
 
-  ArrayList<Tea> tasks = new ArrayList<Tea>();
-  ArrayList<Tea> blocked = new ArrayList<Tea>();
-  ArrayList<Integer> position = new ArrayList<Integer>();
-  ArrayList<ArrayList<Input>> arguments;
-  ArrayList<Integer> resource2 = new ArrayList<Integer>();
+//banker
+ArrayList<Tea> tasksBA = new ArrayList<Tea>();
+ArrayList<ArrayList<Input>> instructionsBA;
+ArrayList<Tea> blockedBA = new ArrayList<Tea>();
+ArrayList<Integer> positionBA = new ArrayList<Integer>();
+int cycleBA = 0;
+int[] resourcesBA;
+int[] releasedBA;
+int remainingCopyBA = 0;
+int remainingBA;
 
-  int[] res_array;
-  int[] released;
 
-  int cycle = 0;
-  int remaning;
-  int remaningCopy = 0;
-  int checkWtime = 0;
   //Works both for bankers and fifo vvv
   public Run(ArrayList<ArrayList<Input>> instructionList, int[] resourceList){
     arguments = instructionList;
     res_array = resourceList;
     remaning = instructionList.size();
     released = new int[res_array.length];
+    instructionsBA = instructionList;
+    resourcesBA = resourceList;
+    remainingBA = instructionList.size();
+    releasedBA = new int[resourcesBA.length];
     addAll(arguments);
   }
   public void runBanker(){
@@ -244,22 +259,24 @@ public class Run {
         public void printOP(){
           System.out.println(" ");
           System.out.println("⚬ FIFO ⚬");
-          int totalFinishing = 0;
+          int finalFinishingTime = 0;
           int totalWaiting = 0;
+          //HMMMM bad idea using string builder check
           StringBuilder result = new StringBuilder("");
           StringBuilder total = new StringBuilder("");
+
           for (int ii = 0; ii < tasks.size(); ii++){
             if (tasks.get(ii).finish < 0){
               result.append("Task: ");
               result.append(" | ");
               result.append(ii+1);
               result.append(" | ");
-              result.append("aborted :( ");
+              result.append("%");
               System.out.println(result);
               result.setLength(0);
             }
             else{
-              totalFinishing += tasks.get(ii).finish;
+              finalFinishingTime += tasks.get(ii).finish;
               totalWaiting += tasks.get(ii).waitTime;
               result.append("Task: ");
               result.append(" | ");
@@ -281,63 +298,19 @@ public class Run {
           total.append(" \t ");
           total.append(" ");
           total.append(" | ");
-          total.append(totalFinishing);
+          total.append(finalFinishingTime);
           total.append(" | ");
           total.append(totalWaiting);
           total.append(" | ");
-          total.append((((float)totalWaiting/totalFinishing)*100));
+          total.append((((float)totalWaiting/finalFinishingTime)*100));
           total.append( "%");
           System.out.println(total);
+          System.out.println(" ");
+
         }
         public void printBanker(){
           System.out.println(" ");
-          System.out.println("=================");
-          System.out.println(" ");
+          System.out.println("=================");      	}
 
-          System.out.println("△ Banker's Algorithm △");
-          int totalFinishing = 0;
-          int totalWaiting = 0;
-          StringBuilder result = new StringBuilder("");
-          StringBuilder total = new StringBuilder("");
-          for (int ii = 0; ii < tasks.size(); ii++){
-            if (tasks.get(ii).finish < 0){
-              result.append("Task: ");
-              result.append(" | ");
-              result.append(ii+1);
-              result.append(" | ");
-              result.append("aborted :( ");
-              System.out.println(result);
-              result.setLength(0);
-            }
-            else{
-              totalFinishing += tasks.get(ii).finish;
-              totalWaiting += tasks.get(ii).waitTime;
-              result.append("Task: ");
-              result.append(" | ");
-              result.append(ii+1);
-              result.append(" | ");
-              result.append(tasks.get(ii).finish );
-              result.append(" | ");
-              result.append(tasks.get(ii).waitTime );
-              result.append(" | ");
-              result.append(((((float)tasks.get(ii).waitTime/tasks.get(ii).finish))*100));
-              result.append("%");
-              System.out.println(result);
-              result.setLength(0);
 
-            }
-          }
-          // /System.out.println("hello");
-          total.append("Totals");
-          total.append(" \t ");
-          total.append(" ");
-          total.append(" | ");
-          total.append(totalFinishing);
-          total.append(" | ");
-          total.append(totalWaiting);
-          total.append(" | ");
-          total.append((((float)totalWaiting/totalFinishing)*100));
-          total.append( "%");
-          System.out.println(total);
-        }
       }
