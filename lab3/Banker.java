@@ -118,9 +118,9 @@ for (int i = 0; i < instructionsBA.size(); i++){
     if (exceedClaimCheck > tasksBA.get(i).claimsBA[currentTask.get(0).resourceType-1]){
       System.out.println("Bankers Algo: During cycle "+cycleBA+ " - "+ (cycleBA+1));
       System.out.print("Banker aborts task " + (i+1 ));
-      System.out.print( " it claims too mych " + currentTask.get(0).var );
+      System.out.print( " it claims too much " + currentTask.get(0).var );
       System.out.println(  " for resource " + currentTask.get(0).resourceType);
-     System.out.println( resourcesBA[currentTask.get(0).resourceType-1]  +  " resources avail for next cycle ");
+     System.out.println( resourcesBA[currentTask.get(0).resourceType-1]  +  " units avail for next cycle ");
      System.out.println( "");
       tasksBA.get(i).endBA = true;
       remainingCopyBA += 1;
