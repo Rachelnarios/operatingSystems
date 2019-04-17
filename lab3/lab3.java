@@ -36,10 +36,13 @@ public class lab3 {
 				int task_number = input.nextInt(); //2
 				int resource_Type = input.nextInt(); //1
 				int[] avail = new int[resource_Type]; //4
-				ArrayList<ArrayList<Input>> actions = new ArrayList<ArrayList<Input>>(); //actions given by file
+				ArrayList<ArrayList<Input>> actionsOP = new ArrayList<ArrayList<Input>>(); //actions given by file
+        ArrayList<ArrayList<Input>> actionsBA = new ArrayList<ArrayList<Input>>(); //actions given by file
 
   			for (int i = 0; i < task_number; i++){
-  				actions.add(new ArrayList<Input>());
+  				actionsOP.add(new ArrayList<Input>());
+          actionsBA.add(new ArrayList<Input>());
+
   			}
 				for (int i = 0; i < resource_Type; i++){
 					avail[i] = input.nextInt();
@@ -51,13 +54,15 @@ public class lab3 {
   				int delay = input.nextInt();
   				int resourceType = input.nextInt();
 					int trash = input.nextInt();
-  				actions.get(tasknum-1).add(new Input(activity, tasknum, delay, resourceType,trash));
+  				actionsOP.get(tasknum-1).add(new Input(activity, tasknum, delay, resourceType,trash));
+          actionsBA.get(tasknum-1).add(new Input(activity, tasknum, delay, resourceType,trash));
+
   			}
         //OPRM = optimistic resource manager
-  			Run OPRM = new Run(actions, avail);
+  			Run OPRM = new Run(actionsOP, avail);
   			OPRM.runOP();
         //Banker
-        Run Banker = new Run(actions, avail);
+        Run Banker = new Run(actionsBA, avail);
         Banker.runBanker();
   		}
   		catch(FileNotFoundException e){
