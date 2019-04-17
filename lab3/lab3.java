@@ -54,9 +54,11 @@ public class lab3 {
   				actions.get(tasknum-1).add(new Input(activity, tasknum, delay, resourceType,trash));
   			}
         //OPRM = optimistic resource manager
-  			optimistic OPRM = new optimistic(actions, avail);
+  			Run OPRM = new Run(actions, avail);
   			OPRM.runOP();
-
+        //Banker
+        Run Banker = new Run(actions, avail);
+        Banker.runBanker();
   		}
   		catch(FileNotFoundException e){
         System.out.println("file was not found :( ");
