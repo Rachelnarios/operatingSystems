@@ -279,7 +279,6 @@ int remainingBA;
               finalFinishingTime += tasks.get(ii).finish;
               totalWaiting += tasks.get(ii).waitTime;
               result.append("Task: ");
-              result.append(" | ");
               result.append(ii+1);
               result.append(" | ");
               result.append(tasks.get(ii).finish );
