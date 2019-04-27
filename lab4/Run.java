@@ -18,6 +18,8 @@ public class Run {
       int avg_res = 0;
       int p_num = 1;
       int faults = 0;
+      int numOfPages;
+
       String algo_name = "none";
 
     	try{
@@ -26,7 +28,6 @@ public class Run {
           System.out.println("Too little arguments :( ");
         }
         else{
-
         machine_size = Integer.parseInt(args[0]);
         page_size =Integer.parseInt(args[1]) ;
         proc_size = Integer.parseInt(args[2]) ;
@@ -35,13 +36,14 @@ public class Run {
         algo_name = args[5] ;
       //  System.out.println(algo_name);
         debug_level = Integer.parseInt(args[6]) ;
-
+         numOfPages = machine_size / page_size;
         }
 
   		}
   		catch(Error e){
         System.out.println(e);
         }
+        testMix(job_mix);
         printAll( page_size,  machine_size, proc_size,  job_mix,  num_ref,  debug_level,  avg_res,  p_num,  faults,  algo_name);
         // printAll();
   	}
@@ -59,5 +61,33 @@ public class Run {
       System.out.println("The total number of faults is "  + faultsx + " and the overall average residency is "+ avg_resx +"\n");
 
 
+    }
+    public static void testMix(int num){
+      List<Process> process_List = new ArrayList<Process>();
+//       There are four possible sets of processes (i.e., values for J)
+// J=1: One process with A=1 and B=C=0, the simplest (fully sequential) case.
+// J=2: Four processes, each with A=1 and B=C=0.
+// J=3: Four processes, each with A=B=C=0 (fully random references).
+// J=4: Four processes. The first process has A=.75, B=.25 and C=0;
+// the second process has A=.75, B=0, and C=.25;
+// the third process has A=.75, B=.125 and C=.125;
+// and the fourth process has A=.5, B=.125 and C=.125.
+      if(num == 1){
+        System.out.println("ONE ");
+      }
+      else if(num == 2){
+        System.out.println("2 ");
+
+      }
+      else if(num == 3){
+        System.out.println("3 ");
+
+      }
+      else if (num == 4){
+        System.out.println("4 ");
+
+      }else{
+        System.out.println("Wrong Job Mix, Try again :( ");
+      }
     }
 }
