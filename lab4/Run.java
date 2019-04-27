@@ -18,7 +18,7 @@ public class Run {
       int avg_res = 0;
       int p_num = 1;
       int faults = 0;
-      int numOfPages;
+      int num_total_page;
 
       String algo_name = "none";
 
@@ -36,15 +36,17 @@ public class Run {
         algo_name = args[5] ;
       //  System.out.println(algo_name);
         debug_level = Integer.parseInt(args[6]) ;
-         numOfPages = machine_size / page_size;
+         num_total_page = machine_size / page_size;
+         Frame[] frameTable = new Frame[num_total_page];
+         testMix(job_mix,num_ref, proc_size, page_size);
+         printAll( page_size,  machine_size, proc_size,  job_mix,  num_ref,  debug_level,  avg_res,  p_num,  faults,  algo_name);
+
         }
 
   		}
   		catch(Error e){
         System.out.println(e);
         }
-        testMix(job_mix);
-        printAll( page_size,  machine_size, proc_size,  job_mix,  num_ref,  debug_level,  avg_res,  p_num,  faults,  algo_name);
         // printAll();
   	}
 
@@ -62,29 +64,42 @@ public class Run {
 
 
     }
-    public static void testMix(int num){
-      List<Process> process_List = new ArrayList<Process>();
+    public static void testMix(int num, int num_refxx, int p_size, int p2_size){
+      ArrayList<Proc> allProc = new ArrayList<Proc>();
 //       There are four possible sets of processes (i.e., values for J)
-// J=1: One process with A=1 and B=C=0, the simplest (fully sequential) case.
-// J=2: Four processes, each with A=1 and B=C=0.
-// J=3: Four processes, each with A=B=C=0 (fully random references).
-// J=4: Four processes. The first process has A=.75, B=.25 and C=0;
-// the second process has A=.75, B=0, and C=.25;
-// the third process has A=.75, B=.125 and C=.125;
-// and the fourth process has A=.5, B=.125 and C=.125.
+
       if(num == 1){
-        System.out.println("ONE ");
+        // J=1: One Proc with A=1 and B=C=0, the simplest (fully sequential) case.
+         allProc.add(new Proc(num_refxx, p_size, p2_size, 1, 1, 0, 0));
       }
       else if(num == 2){
-        System.out.println("2 ");
+        // J=2: Four processes, each with A=1 and B=C=0.
+        allProc.add(new Proc(num_refxx, p_size, p2_size, 1, 1, 0, 0));
+        allProc.add(new Proc(num_refxx, p_size, p2_size, 2, 1, 0, 0));
+        allProc.add(new Proc(num_refxx, p_size, p2_size, 3, 1, 0, 0));
+        allProc.add(new Proc(num_refxx, p_size, p2_size, 4, 1, 0, 0));
+        // System.out.println("2 ");
 
       }
       else if(num == 3){
-        System.out.println("3 ");
+        // System.out.println("3 ");
+        // J=3: Four processes, each with A=B=C=0 (fully random references).
+        allProc.add(new Proc(num_refxx, p_size, p2_size, 1, 0, 0, 0));
+        allProc.add(new Proc(num_refxx, p_size, p2_size, 2, 0, 0, 0));
+        allProc.add(new Proc(num_refxx, p_size, p2_size, 3, 0, 0, 0));
+        allProc.add(new Proc(num_refxx, p_size, p2_size, 4, 0, 0, 0));
 
       }
       else if (num == 4){
-        System.out.println("4 ");
+        // J=4: Four processes. The first process has A=.75, B=.25 and C=0;
+        // the second process has A=.75, B=0, and C=.25;
+        // the third process has A=.75, B=.125 and C=.125;
+        // and the fourth process has A=.5, B=.125 and C=.125.
+        // System.out.println("4 ");
+          allProc.add(new Proc(num_refxx, p_size, p2_size, 1, 0.75, 0.25, 0));
+          allProc.add(new Proc(num_refxx, p_size, p2_size, 2, 0.75, 0, 0.25));
+          allProc.add(new Proc(num_refxx, p_size, p2_size, 3, 0.75, 0.125, 0.125));
+          allProc.add(new Proc(num_refxx, p_size, p2_size, 4, 0.5, 0.125, 0.125));
 
       }else{
         System.out.println("Wrong Job Mix, Try again :( ");

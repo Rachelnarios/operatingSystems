@@ -1,5 +1,5 @@
 import java.util.*;
-public class processObj {
+public class Proc {
   private int numOfReferences;
   private int curReferences;
   private int size;
@@ -9,7 +9,7 @@ public class processObj {
   private double b;
   private double c;
 
-  public Process (int x, int size, int page_size, int p_num, double a, double b, double c) {
+  public Proc (int x, int size, int page_size, int p_num, double a, double b, double c) {
       numOfReferences = x;
       this.size = size;
       this.p_num = p_num;
