@@ -19,7 +19,7 @@ public class Run {
       int p_num = 1;
       int faults = 0;
       int num_total_page;
-
+      int q;
       String algo_name = "none";
 
     	try{
@@ -105,4 +105,15 @@ public class Run {
         System.out.println("Wrong Job Mix, Try again :( ");
       }
     }
+    //Simulated Working Action
+    public static void simulatePage(){
+      //simulations
+      q = 3;
+
+    }
+    public static void randomNumberSelector(){}
+    public static void FIFO(){}
+    public static void LRU(){}
+    public static void resolve(){}
+    public static void evict(){}
 }
