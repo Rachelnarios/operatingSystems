@@ -23,13 +23,14 @@ public class Proc {
   private int nextRefo;
 
   public Proc (int x, int size, int page_size, int p_num, double a, double b, double c) {
-      numOfReferences = x;
       this.size = size;
       this.p_num = p_num;
       this.a = a;
       this.b = b;
       this.c = c;
       this.page_size = page_size;
+      this.numOfReferences = x;
+
   }
 //Create the get and replace methods
   public int getSize(){
@@ -73,9 +74,9 @@ public class Proc {
     return firstWord;
   }
   public void setWordAcess(){
-    firstWord = true;
-    currAdd = (111 * p_num) % proc;
-    currentPageNumber = currAdd / page_size;
+    this.firstWord = true;
+    this.currAdd = (111 * p_num) % proc;
+    this.currentPageNumber = currAdd / page_size;
 
   }
   //Figure out how to set the nect word Address
