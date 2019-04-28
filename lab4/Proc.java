@@ -16,12 +16,11 @@ public class Proc {
   private int nextAdd;
   private int currentPageNumber;
   private boolean firstWord;
-
-  private boolean firstTranslation;
-  private int currentReferenceAddress;
-  private int pageFaultCounter;
-  private int residencyTime;
-  private int nextReferenceAddress;
+  private boolean PASS;
+  private int CRA;
+  private int counter;
+  private int RTfinal;
+  private int nextRefo;
 
   public Proc (int x, int size, int page_size, int p_num, double a, double b, double c) {
       numOfReferences = x;
@@ -35,6 +34,9 @@ public class Proc {
 //Create the get and replace methods
   public int getSize(){
     return size;
+  }
+  public void setSize(int x ){
+    size = x;
   }
   public int getEvicted(){
     return evictions;
@@ -60,9 +62,15 @@ public class Proc {
   public void setResTime(int x){
     resTime += c;
   }
+  public void getCurrent(){
+    return currAdd;
+  }
   public void setCurrent(){
     currAdd = nextAdd;
     currentPageNumber = currAdd / page_size;
+  }
+  public void getWord(){
+    return firstWord;
   }
   public void setWordAcess(){
     firstWord = true;
@@ -70,5 +78,5 @@ public class Proc {
     currentPageNumber = currAdd / page_size;
 
   }
-
+  //Figure out how to set the nect word Address
 }
