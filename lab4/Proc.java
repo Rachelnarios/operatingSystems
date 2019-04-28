@@ -18,4 +18,8 @@ public class Proc {
       this.c = c;
       this.page_size = page_size;
   }
+//Create the get and replace methods
+  public int getSize(){
+    return size;
+  }
 }

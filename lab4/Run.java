@@ -39,7 +39,7 @@ public class Run {
          num_total_page = machine_size / page_size;
          Frame[] frameTable = new Frame[num_total_page];
          testMix(job_mix,num_ref, proc_size, page_size);
-         printAll( page_size,  machine_size, proc_size,  job_mix,  num_ref,  debug_level,  avg_res,  p_num,  faults,  algo_name);
+      //   printAll( page_size,  machine_size, proc_size,  job_mix,  num_ref,  debug_level,  avg_res,  p_num,  faults,  algo_name);
 
         }
 
@@ -104,11 +104,16 @@ public class Run {
       }else{
         System.out.println("Wrong Job Mix, Try again :( ");
       }
+      for(Proc p : allProc) {
+        System.out.println(p.getSize());
+      }
     }
     //Simulated Working Action
     public static void simulatePage(){
       //simulations
-      q = 3;
+      int q = 3;
+    //refernce word 111*k*mod(S)
+
 
     }
     public static void randomNumberSelector(){}
