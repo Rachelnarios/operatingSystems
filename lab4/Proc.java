@@ -63,14 +63,14 @@ public class Proc {
   public void setResTime(int x){
     resTime += c;
   }
-  public void getCurrent(){
+  public int getCurrent(){
     return currAdd;
   }
   public void setCurrent(){
     currAdd = nextAdd;
     currentPageNumber = currAdd / page_size;
   }
-  public void getWord(){
+  public boolean getWord(){
     return firstWord;
   }
   public void setWordAcess(){
