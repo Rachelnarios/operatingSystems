@@ -23,6 +23,7 @@ public class Run {
       int num_total_page;
       int q;
       String algo_name = "none";
+      ArrayList<Proc> pro = new ArrayList<Proc>();
       try{
         Scanner ran = new Scanner(new FileInputStream("random-numbers.txt"));
         while(ran.hasNextInt()){
@@ -45,12 +46,17 @@ public class Run {
         algo_name = args[5] ;
       //  System.out.println(algo_name);
         debug_level = Integer.parseInt(args[6]) ;
-         num_total_page = machine_size / page_size;
-
-         Frame[] frameTable = new Frame[num_total_page];
-         testMix(job_mix,num_ref, proc_size, page_size);
-      //   printAll( page_size,  machine_size, proc_size,  job_mix,  num_ref,  debug_level,  avg_res,  p_num,  faults,  algo_name);
-
+        num_total_page = machine_size / page_size;
+        //Create an empty frame
+        Frame[] frameTable = createF(num_total_page); //Array out of bounds?? -> Tested by calling a method
+        // //Create a process
+        // createP();
+        //Test the mix type 1,2,3,4... More info given below
+        testMix(pro,job_mix,num_ref, proc_size, page_size);
+        //Print given by the input
+        printGiven( page_size,  machine_size, proc_size,  job_mix,  num_ref,  debug_level,  avg_res,  p_num,  faults,  algo_name);
+        //Call the runner that will evict and replace
+        place(frameTable,pro,algo_name);
         }
 
   		}
@@ -58,10 +64,17 @@ public class Run {
         System.out.println(e);
         }
 
-        // printAll();
+        // printGiven();
   	}
-
-    public static void printAll(int page_sizex, int machine_sizex, int proc_sizex, int job_mixx, int num_refx, int debug_levelx, int avg_resx, int p_numx, int faultsx, String algo_namex){
+    public static ArrayList<Proc>  createP(){
+      ArrayList<Proc> pro = new ArrayList<Proc>();
+      return pro;
+    }
+    public static Frame[] createF(int num_total_page){
+      Frame[] frameTable = new Frame[num_total_page];
+      return frameTable;
+    }
+    public static void printGiven(int page_sizex, int machine_sizex, int proc_sizex, int job_mixx, int num_refx, int debug_levelx, int avg_resx, int p_numx, int faultsx, String algo_namex){
 
       System.out.println("\n"+"The Machine Size is " + machine_sizex);
       System.out.println("The page size is " + page_sizex);
@@ -75,8 +88,7 @@ public class Run {
 
 
     }
-    public static void testMix(int num, int num_refxx, int p_size, int p2_size){
-      ArrayList<Proc> allProc = new ArrayList<Proc>();
+    public static ArrayList<Proc> testMix(ArrayList<Proc> allProc, int num, int num_refxx, int p_size, int p2_size){
 //       There are four possible sets of processes (i.e., values for J)
 
       if(num == 1){
@@ -115,16 +127,18 @@ public class Run {
       }else{
         System.out.println("Wrong Job Mix, Try again :( ");
       }
-      for(Proc p : allProc) {
-        System.out.println(p.getSize());
-      }
+      return allProc;
+      // for(Proc p : allProc) {
+      //   System.out.println(p.getSize());
+      // }
     }
     //Simulated Working Action
-    public static void simulatePage(){
+    public static void place(Frame[] a , ArrayList<Proc> b, String algo_name){
       //simulations
       int q = 3;
     //refernce word 111*k*mod(S)
-
+    
+    System.out.println("~Simulation~");
 
     }
 
