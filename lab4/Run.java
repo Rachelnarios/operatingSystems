@@ -7,8 +7,10 @@ import java.util.ArrayList;
 
 
 public class Run {
+  //Create a global random list
+  public static ArrayList<Integer> randomList = new ArrayList<Integer>();
 
-  	public static void main(String args[]){
+  	public static void main(String args[]) throws FileNotFoundException{
       int page_size = 0;
       int machine_size = 0;
       int proc_size = 0;
@@ -21,7 +23,14 @@ public class Run {
       int num_total_page;
       int q;
       String algo_name = "none";
-
+      try{
+        Scanner ran = new Scanner(new FileInputStream("random-numbers.txt"));
+        while(ran.hasNextInt()){
+          randomList.add(ran.nextInt());
+        }
+      }catch(Error E){
+        System.out.println("Error with Random files txt");
+      }
     	try{
         // /10 10 20 1 10 lru
         if(args.length != 7){
@@ -37,6 +46,7 @@ public class Run {
       //  System.out.println(algo_name);
         debug_level = Integer.parseInt(args[6]) ;
          num_total_page = machine_size / page_size;
+
          Frame[] frameTable = new Frame[num_total_page];
          testMix(job_mix,num_ref, proc_size, page_size);
       //   printAll( page_size,  machine_size, proc_size,  job_mix,  num_ref,  debug_level,  avg_res,  p_num,  faults,  algo_name);
@@ -47,6 +57,7 @@ public class Run {
   		catch(Error e){
         System.out.println(e);
         }
+
         // printAll();
   	}
 
@@ -116,9 +127,10 @@ public class Run {
 
 
     }
+
     public static void randomNumberSelector(){}
     public static void FIFO(){}
     public static void LRU(){}
-    public static void resolve(){}
+
     public static void evict(){}
 }
