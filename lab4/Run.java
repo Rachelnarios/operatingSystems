@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Run {
   //Create a global random list
   public static ArrayList<Integer> randomList = new ArrayList<Integer>();
-
+  public static int pageFaults;
   	public static void main(String args[]) throws FileNotFoundException{
       int page_size = 0;
       int machine_size = 0;
@@ -22,6 +22,7 @@ public class Run {
       int faults = 0;
       int num_total_page;
       int q;
+      int pageFaultTotal =0;
       String algo_name = "none";
       ArrayList<Proc> pro = new ArrayList<Proc>();
       try{
@@ -137,7 +138,7 @@ public class Run {
       //simulations
       int q = 3;
     //refernce word 111*k*mod(S)
-    
+
     System.out.println("~Simulation~");
 
     }
@@ -145,6 +146,30 @@ public class Run {
     public static void randomNumberSelector(){}
     public static void FIFO(){}
     public static void LRU(){}
+    public static void RANDOM(){
 
-    public static void evict(){}
+    }
+    public static void victim(Frame[] frame, Proc pro, int cycle, String algoname, ArrayList<Frame> LRU, ArrayList<Integer> random, ArrayList<Frame> LIFO){
+      boolean seen = false;
+      int res = 0;
+      pageFaults += 1;
+      for(int i = frame.length-1; i> 0; i--){
+        Frame t = new Frame(pro.getSize(),i);
+
+      }
+      if(seen == true){
+        if(algoname.equals("lru")){
+          LRU();
+        }
+        else if(algoname.equals("random")){
+          RANDOM();
+        }
+        else if(algoname.equals("fifo")){
+          FIFO();
+        }else{
+          System.out.println("No matching Run algo, try again");
+          System.exit(1);
+        }
+      }
+    }
 }
