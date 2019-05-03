@@ -76,15 +76,13 @@ public class Run {
     }
     public static void start(){
       //--Start iterations of adding processes to a frame table---/
-      int q = 0; //Round Robin Quanta
-      int cycle = 1; //Time
-      int hit = -2; //Check to see if it is a page hit
-      ListIterator<P> it = allp.listIterator();      //Links and iterates
-
-
       FrameT[] frametable = new FrameT[num]; //create a frame table to store proc [Proc][Proc][Proc]
       List<FrameT> FIFO = new ArrayList<FrameT>(); //First in first out
       List<FrameT> LRU = new ArrayList<FrameT>(); //Last Recently used
+      ListIterator<P> it = allp.listIterator();      //Links and iterates
+      int cycle = 1; //Time
+      int hit = -2; //Check to see if it is a page hit
+      int q = 0; //Round Robin Quanta
 
       //While terminated is not done
       while (allp.size()!=done.size()) {
