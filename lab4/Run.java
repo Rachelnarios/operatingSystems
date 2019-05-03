@@ -62,7 +62,7 @@ public class Run {
         int q = 0; //Round Robin Quanta
         Iterator<P> it = allp.iterator();
         FrameT[] frametable = new FrameT[num]; //create a frame table to store proc
-        Stack<FrameT> LIFO = new Stack<FrameT>(); //Last in first out (implements stack)
+        List<FrameT> FIFO = new ArrayList<FrameT>(); //Last in first out (implements stack)
         List<FrameT> LRU = new ArrayList<FrameT>(); //Last Recently used
         int cycle = 1; //Time
         //While terminated is not done
@@ -112,7 +112,7 @@ public class Run {
                           temp.nextpass = cycle;
                           frametable[i] = temp;
                           LRU.add(temp);
-                          LIFO.add(temp);
+                          FIFO.add(temp);
                           processed = true;
                           break;
                       }
@@ -132,10 +132,12 @@ public class Run {
                           FrameT temp = frametable[i];
                           tableEnter( temp,  process,  cycle);
                       }
-                      else if (algo_name.equals("lifo")) {
-                          FrameT temp = LIFO.peek();
-                          tableEnter( temp,  process,  cycle);
-                          LIFO.add(temp);
+                      else if (algo_name.equals("fifo")) {
+                        FrameT temp = FIFO.get(0);
+                        FIFO.remove(0);
+                        int residency = cycle - temp.nextpass;
+                        tableEnter( temp,  process,  cycle);
+                        FIFO.add(temp);
                       }
 
                   }
