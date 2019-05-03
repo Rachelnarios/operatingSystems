@@ -37,8 +37,13 @@ public class Run {
 
         try{
           //User gave wrong args
-          if(args.length != 7){
+          if(args.length < 6){
             System.out.println("Too little arguments :c ");
+            System.exit(1);
+      }else if(args.length > 7){
+        System.out.println("Too MANY arguments :c ");
+        System.exit(1);
+
       }
       else{
         //Pass given in args to vars to print
