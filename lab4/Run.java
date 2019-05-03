@@ -1,28 +1,28 @@
 import java.util.*;
 import java.io.*;
 public class Run {
-
+    //Final numbers to be printed out global bc several methods use it
     public static int totalAverage = 0;
     public static int totalEvicted = 0;
     public static int totalResFinalNum = 0;
     public static int faultsFinalNum = 0;
-
+    //List of process and done ones
     public static List<P> done = new ArrayList<P>();
     public static List<P> allp = new ArrayList<P>();
+    //Random list
     public static ArrayList<Integer> randomList = new ArrayList<Integer>();
+    //User input
+    public static String algo_name = "noalgo";
+    public static int machine_size = 0;
+    public static int page_size = 0;
+    public static int proc_size = 0;
+    public static int job_mix = 0;
+    public static int num_ref = 0;
+    public static int debug_level = 0;
+    public static int num = 0;
 
+    //Begin
     public static void main (String args[]) throws IOException {
-      //Define what will be read from user
-        String algo_name = "noalgo";
-        int hit = -2;
-        int machine_size = 0;
-        int page_size = 0;
-        int proc_size = 0;
-        int job_mix = 0;
-        int num_ref = 0;
-        int debug_level = 0;
-        int num = 0;
-
         //Read random file Scanner
         try{
             Scanner ran = new Scanner(new FileInputStream("random-numbers.txt"));
@@ -35,143 +35,159 @@ public class Run {
         //read user input
 
         try{
-      // /10 10 20 1 10 lru
-      if(args.length != 7){
-        System.out.println("Too little arguments :c ");
+          //User gave wrong args
+          if(args.length != 7){
+            System.out.println("Too little arguments :c ");
       }
       else{
-      machine_size = Integer.parseInt(args[0]);
-      page_size =Integer.parseInt(args[1]) ;
-      proc_size = Integer.parseInt(args[2]) ;
-      job_mix = Integer.parseInt(args[3]) ;
-      num_ref =Integer.parseInt(args[4]) ;
-      algo_name = args[5] ;
-    //  System.out.println(algo_name);
-      debug_level = Integer.parseInt(args[6]) ;
-       num = machine_size / page_size;
-
+        //Pass given in args to vars to print
+          machine_size = Integer.parseInt(args[0]);
+          page_size =Integer.parseInt(args[1]) ;
+          proc_size = Integer.parseInt(args[2]) ;
+          job_mix = Integer.parseInt(args[3]) ;
+          num_ref =Integer.parseInt(args[4]) ;
+          algo_name = args[5] ;
+          debug_level = Integer.parseInt(args[6]) ;
+         num = machine_size / page_size;
       }
 
     }
+    //If there is an error display it
     catch(Error e){
       System.out.println(e);
       }
-      //Print what was given by input
-      printGiven(machine_size,page_size,proc_size,job_mix, num_ref, algo_name,debug_level);
-      //Determing job mix level
-      jobMixlevel(job_mix, num_ref, proc_size, page_size);
-
-      //--Start of evictions and iterations---/
-        int q = 0; //Round Robin Quanta
-        Iterator<P> it = allp.iterator();
-        FrameT[] frametable = new FrameT[num]; //create a frame table to store proc
-        List<FrameT> FIFO = new ArrayList<FrameT>(); //First in first out
-        List<FrameT> LRU = new ArrayList<FrameT>(); //Last Recently used
-        int cycle = 1; //Time
-
-        //While terminated is not done
-        while (allp.size()!=done.size()) {
-            P process;
-            if (!it.hasNext()) {
-                it = allp.iterator();
-                process = it.next();
-            }
-            else {
-                process = it.next();
-            }
-
-            while (q != 3) {
-              int pnum;
-              int tablePnum;
-                if (!process.firstpass) {
-                  //First time we have seen it
-                    process.firstpass = true; //Set it to true
-                    process.currAdd = (111 * process.pnum) % process.psize; //Calculate pg size and how big the iterations will be
-                    process.actualpnum = process.currAdd / process.pgsize; //Iterations
-
-                }
-                else {
-                  //We have seen it we can iterate normally
-                    process.currAdd = process.next;
-                    process.actualpnum = process.currAdd / process.pgsize;
-                }
-
-                pnum = process.pnum; //Set it to current P number
-                tablePnum = process.actualpnum; //Update Table
-                hit = 0; //Say it was a hit
-
-                for (int i = 0; i < frametable.length; i++) {
-                    if (frametable[i] != null ) {
-                      if(pnum ==  frametable[i].pnum && frametable[i].tablePnum == tablePnum){
-                        LRU.remove(frametable[i]);
-                        LRU.add(frametable[i]);
-                        hit = 1;
-                    }
-                  }
-                }
-                if (hit == 0) {
-                  process.  pcounter++;
-                  boolean processed = false;
-                  for (int i = frametable.length-1; i >= 0; i--) {
-                      if (frametable[i] == null) { // If frames are free
-                          FrameT temp = new FrameT(process.pgsize, i);
-                          temp.free = true;
-                          temp.pnum =  process.pnum;
-                          temp.tablePnum = process.actualpnum;
-                          temp.tablecurrp = process;
-                          temp.nextpass = cycle;
-                          frametable[i] = temp;
-                          LRU.add(temp);
-                          FIFO.add(temp);
-                          processed = true;
-                          break;
-                      }
-                  }
-                  if (!processed) {
-                      if (algo_name.equals("lru")) {
-                          FrameT temp = LRU.get(0);
-                          LRU.remove(0);
-                          int residency = cycle - temp.nextpass;
-                          tableEnter( temp,  process,  cycle);
-                          LRU.add(temp);
-                      }
-                      else if (algo_name.equals("random")) {
-                          int r = randomList.get(0);
-                          randomList.remove(0);
-                          int i = r % frametable.length;
-                          FrameT temp = frametable[i];
-                          tableEnter( temp,  process,  cycle);
-                      }
-                      else if (algo_name.equals("fifo")) {
-                        FrameT temp = FIFO.get(0);
-                        FIFO.remove(0);
-                        int residency = cycle - temp.nextpass;
-                        tableEnter( temp,  process,  cycle);
-                        FIFO.add(temp);
-                      }
-                      else{
-                        System.out.println("That algo does not exist");
-                        System.exit(1);
-                      }
-
-                  }
-                }
-                victimEvict( process); //Choose a victim to evict based on specs
-                q++;
-                cycle++;
-                process.refcurr++;
-
-                if (process.refcurr == process.refnum) {
-                    done.add(process);
-                    q = 3;
-                }
-            }
-            q = 0;
-        }
+        //Print what was given by input
+        printGiven(machine_size,page_size,proc_size,job_mix, num_ref, algo_name,debug_level);
+        //Determing job mix level
+        jobMixlevel(job_mix, num_ref, proc_size, page_size);
+        //Begin iterating through table
+        start();
+        //Print sections meaning each p
         sections();
+        //Print overall stats
         overall();
 
     }
+    public static void start(){
+      //--Start iterations of adding processes to a frame table---/
+      int q = 0; //Round Robin Quanta
+      Iterator<P> it = allp.iterator();
+      FrameT[] frametable = new FrameT[num]; //create a frame table to store proc
+      List<FrameT> FIFO = new ArrayList<FrameT>(); //First in first out
+      List<FrameT> LRU = new ArrayList<FrameT>(); //Last Recently used
+      int cycle = 1; //Time
+      int hit = -2;
+      //While terminated is not done
+      while (allp.size()!=done.size()) {
+        //Define curr proc
+          P process;
+          if (!it.hasNext()) {
+              it = allp.iterator();
+              process = it.next();
+          }
+          else {
+              process = it.next();
+          }
+
+          while (q != 3) {
+            //Quanta is not 3 then we still can run
+            int pnum; //define pnum
+            int tablePnum; //define table num
+              if (!process.firstpass) {
+                //First time we have seen it
+                  process.firstpass = true; //Set it to true
+                  process.currAdd = (111 * process.pnum) % process.psize; //Calculate pg size and how big the iterations will be
+                  process.actualpnum = process.currAdd / process.pgsize; //Iterations
+
+              }
+              else {
+                  //We have seen it we can iterate normally
+                  process.currAdd = process.next;
+                  process.actualpnum = process.currAdd / process.pgsize;
+              }
+
+              pnum = process.pnum; //Set it to current P number
+              tablePnum = process.actualpnum; //Update Table
+              hit = 0; //Say it was a hit
+
+              for (int i = 0; i < frametable.length; i++) {
+                //Push away element and add the new one
+                  if (frametable[i] != null ) {
+                    if(pnum ==  frametable[i].pnum){
+                      if(frametable[i].tablePnum == tablePnum){
+                     //Last recently used
+                      LRU.remove(frametable[i]);
+                      LRU.add(frametable[i]);
+                      //hit
+                      hit = 1;
+                  }
+                }
+              }
+            }
+
+              if (hit == 0) {
+                process.pcounter++;
+                boolean processed = false;
+                for (int i = frametable.length-1; i >= 0; i--) {
+                    if (frametable[i] == null) { // If frames are free
+                        FrameT temp = new FrameT(process.pgsize, i);
+                        temp.free = true;
+                        temp.pnum =  process.pnum;
+                        temp.tablePnum = process.actualpnum;
+                        temp.tablecurrp = process;
+                        temp.nextpass = cycle;
+                        frametable[i] = temp;
+                        LRU.add(temp);
+                        FIFO.add(temp);
+                        processed = true;
+                        break;
+                    }
+                }
+                //If we have not processed the p then read what kind of algo is it
+                if (!processed) {
+                    if (algo_name.equals("lru")) {
+                        FrameT temp = LRU.get(0);
+                        LRU.remove(0);
+                        int residency = cycle - temp.nextpass;
+                        tableEnter( temp,  process,  cycle);
+                        LRU.add(temp);
+                    }
+                    else if (algo_name.equals("fifo")) {
+                      FrameT temp = FIFO.get(0);
+                      FIFO.remove(0);
+                      int residency = cycle - temp.nextpass;
+                      tableEnter( temp,  process,  cycle);
+                      FIFO.add(temp);
+                    }
+                    else if (algo_name.equals("random")) {
+                        int r = randomList.get(0);
+                        randomList.remove(0);
+                        int i = r % frametable.length;
+                        FrameT temp = frametable[i];
+                        tableEnter( temp,  process,  cycle);
+                    }
+                    else{
+                      System.out.println("That algo does not exist");
+                      System.exit(1);
+                    }
+
+                }
+              }
+              victimEvict( process); //Choose a victim to evict based on specs
+              q++; //Increase quanta
+              cycle++; //Time also increases
+              process.refcurr++; //Current ALSo increases
+
+              if (process.refcurr == process.refnum) {
+                //If the ref number is the same as the process we are done set q = 3
+                  done.add(process);
+                  q = 3;
+              }
+          }
+          q = 0;
+      }
+    }
+    //Method to evict a victim
     public static void victimEvict(P process){
       int r = randomList.get(0);
       randomList.remove(0);
@@ -191,6 +207,7 @@ public class Run {
           process.next = r % process.psize;
       }
     }
+    //Enter P into the table
     public static void tableEnter(FrameT temp, P process, int cycle){
       int residency = cycle - temp.nextpass;
       temp.tablecurrp.victims ++;
@@ -201,6 +218,7 @@ public class Run {
       temp.tablecurrp = process;
       temp.nextpass = cycle;
     }
+    //Print overall stats
     public static void overall(){
       if (totalEvicted == 0) {
           System.out.println("Total number of faults is " + faultsFinalNum + ".");
@@ -212,6 +230,7 @@ public class Run {
           System.out.println("Total number of faults is " + faultsFinalNum + " and the overall average residency is " + totalAverage );
       }
     }
+    //Print sections
     public static void sections(){
       for (P process : done) {
           if (process.victims == 0) {
@@ -228,13 +247,12 @@ public class Run {
                 totalAverage += averageResidency;
 
             }
-
-
           faultsFinalNum += process.pcounter;
 
       }
 
     }
+    //Print given
     public static void printGiven(  int machine_sizex, int page_sizex, int proc_sizex,int job_mixx,int  num_refx, String algo_namex, int debug_levelx){
       System.out.println("\n"+"The Machine Size is " + machine_sizex);
       System.out.println("The page size is " + page_sizex);
@@ -245,6 +263,7 @@ public class Run {
       System.out.println("The level of debugging output is "+ debug_levelx + "\n");
 
     }
+    //Determine job mix
     public static void jobMixlevel(int job_mix, int num_ref, int proc_size, int page_size){
       if(job_mix == 1){
               allp.add(new P(num_ref, proc_size, page_size, 1, 1, 0, 0));
