@@ -63,29 +63,28 @@ public class Run {
         Stack<FrameT> LIFO = new Stack<FrameT>();
         int cycle = 1;
         while (processList.size()!=terminatedList.size()) {
-
-            P p;
+            P process;
             if (!it.hasNext()) {
                 it = processList.iterator();
-                p = it.next();
+                process = it.next();
             }
             else {
-                p = it.next();
+                process = it.next();
             }
             while (q != 3) {
 
-                if (!p.firstpass) {
-                    p.firstpass = true;
-                    p.currAdd = (111 * p.pnum) % p.psize;
-                    p.actualpnum = p.currAdd / p.pgsize;
+                if (!process.firstpass) {
+                    process.firstpass = true;
+                    process.currAdd = (111 * process.pnum) % process.psize;
+                    process.actualpnum = process.currAdd / process.pgsize;
 
                 }
                 else {
-                    p.currAdd = p.next;
-                    p.actualpnum = p.currAdd / p.pgsize;
+                    process.currAdd = process.next;
+                    process.actualpnum = process.currAdd / process.pgsize;
                 }
-                int pnum = p.pnum;
-                int tablePnum = p.actualpnum;
+                int pnum = process.pnum;
+                int tablePnum = process.actualpnum;
                 hit = 0;
                 for (int i = 0; i < frameTable.length; i++) {
                     if (frameTable[i] != null ) {
@@ -97,15 +96,15 @@ public class Run {
                   }
                 }
                 if (hit == 0) {
-                  p.  pcounter++;
+                  process.  pcounter++;
                   boolean processed = false;
                   for (int i = frameTable.length-1; i >= 0; i--) {
                       if (frameTable[i] == null) { // If frames are free
-                          FrameT temp = new FrameT(p.pgsize, i);
+                          FrameT temp = new FrameT(process.pgsize, i);
                           temp.free = true;
-                          temp.pnum =  p.pnum;
-                          temp.tablePnum = p.actualpnum;
-                          temp.tablecurrp = p;
+                          temp.pnum =  process.pnum;
+                          temp.tablePnum = process.actualpnum;
+                          temp.tablecurrp = process;
                           temp.nextpass = cycle;
                           frameTable[i] = temp;
                           LRU.add(temp);
@@ -115,43 +114,23 @@ public class Run {
                       }
                   }
                   if (!processed) {
-                      if (algo_name.equalsIgnoreCase("lru")) {
+                      if (algo_name.equals("lru")) {
                           FrameT temp = LRU.get(0);
                           LRU.remove(0);
                           int residency = cycle - temp.nextpass;
-                          temp.tablecurrp.victims ++;
-                          temp.tablecurrp.restime += residency;
-                          temp.free = true;
-                          temp.pnum =  p.pnum;
-                          temp.tablePnum = p.actualpnum;
-                          temp.tablecurrp = p;
-                          temp.nextpass = cycle;
+                          tableEnter( temp,  process,  cycle);
                           LRU.add(temp);
                       }
-                      else if (algo_name.equalsIgnoreCase("random")) {
+                      else if (algo_name.equals("random")) {
                           int r = randomList.get(0);
                           randomList.remove(0);
                           int i = r % frameTable.length;
                           FrameT temp = frameTable[i];
-                          int residency = cycle - temp.nextpass;
-                          temp.tablecurrp.victims ++;
-                          temp.tablecurrp.restime += residency;
-                          temp.free = true;
-                          temp.pnum =  p.pnum;
-                          temp.tablePnum = p.actualpnum;
-                          temp.tablecurrp = p;
-                          temp.nextpass = cycle;
+                          tableEnter( temp,  process,  cycle);
                       }
-                      else if (algo_name.equalsIgnoreCase("lifo")) {
+                      else if (algo_name.equals("lifo")) {
                           FrameT temp = LIFO.peek();
-                          int residency = cycle - temp.nextpass;
-                          temp.tablecurrp.victims ++;
-                          temp.tablecurrp.restime += residency;
-                          temp.free = true;
-                          temp.pnum =  p.pnum;
-                          temp.tablePnum = p.actualpnum;
-                          temp.tablecurrp = p;
-                          temp.nextpass = cycle;
+                          tableEnter( temp,  process,  cycle);
                           LIFO.add(temp);
                       }
 
@@ -161,26 +140,26 @@ public class Run {
                 randomList.remove(0);
                 double y = r / (Integer.MAX_VALUE + 1d);
 
-                if (y < p.a) {
-                    p.next = (p.currAdd + 1) % p.psize;
+                if (y < process.a) {
+                    process.next = (process.currAdd + 1) % process.psize;
                 }
-                else if (y < p.a + p.b) {
-                    p.next = (p.currAdd - 5 + p.psize) % p.psize;
+                else if (y < process.a + process.b) {
+                    process.next = (process.currAdd - 5 + process.psize) % process.psize;
                 }
-                else if (y < p.a + p.b + p.c) {
-                    p.next = (p.currAdd + 4) % p.psize;
+                else if (y < process.a + process.b + process.c) {
+                    process.next = (process.currAdd + 4) % process.psize;
                 }
                 else {
                     r = randomList.get(0);
                     randomList.remove(0);
-                    p.next = r % p.psize;
+                    process.next = r % process.psize;
                 }
 
                 cycle++;
                 q++;
-                p.refcurr++;
-                if (p.refcurr == p.refnum) { 
-                    terminatedList.add(p);
+                process.refcurr++;
+                if (process.refcurr == process.refnum) {
+                    terminatedList.add(process);
                     q = 3;
 
 
@@ -191,6 +170,17 @@ public class Run {
         sections();
         overall();
 
+    }
+
+    public static void tableEnter(FrameT temp, P process, int cycle){
+      int residency = cycle - temp.nextpass;
+      temp.tablecurrp.victims ++;
+      temp.tablecurrp.restime += residency;
+      temp.free = true;
+      temp.pnum =  process.pnum;
+      temp.tablePnum = process.actualpnum;
+      temp.tablecurrp = process;
+      temp.nextpass = cycle;
     }
     public static void overall(){
       if (totalvictims == 0) {
@@ -204,24 +194,24 @@ public class Run {
       }
     }
     public static void sections(){
-      for (P p : terminatedList) {
-          if (p.victims == 0) {
-              System.out.println("P " + p.pnum + " had " + p.pcounter + " faults.");
+      for (P process : terminatedList) {
+          if (process.victims == 0) {
+              System.out.println("P " + process.pnum + " had " + process.pcounter + " faults.");
               System.out.println("No evictions: the average residency is none.");
-              totalResidency += p.restime;
+              totalResidency += process.restime;
           }
             else {
-                int averageResidency = p.restime / (int)p.victims;
-                totalvictims += p.victims;
-                totalResidency += p.restime;
-                System.out.println("Faults for process " + p.pnum + " is " + p.pcounter);
+                int averageResidency = process.restime / (int)process.victims;
+                totalvictims += process.victims;
+                totalResidency += process.restime;
+                System.out.println("Faults for process " + process.pnum + " is " + process.pcounter);
                 System.out.println("Average Residency " + " is " + averageResidency);
                 overallAverageResidency += averageResidency;
 
             }
 
 
-          totalFaults += p.pcounter;
+          totalFaults += process.pcounter;
 
       }
 
