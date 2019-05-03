@@ -12,6 +12,7 @@ public class Run {
     //Random list
     public static ArrayList<Integer> randomList = new ArrayList<Integer>();
     //User input
+
     public static String algo_name = "noalgo";
     public static int machine_size = 0;
     public static int page_size = 0;
@@ -48,7 +49,7 @@ public class Run {
           num_ref =Integer.parseInt(args[4]) ;
           algo_name = args[5] ;
           debug_level = Integer.parseInt(args[6]) ;
-         num = machine_size / page_size;
+          num = machine_size / page_size;
       }
 
     }
@@ -71,38 +72,47 @@ public class Run {
     public static void start(){
       //--Start iterations of adding processes to a frame table---/
       int q = 0; //Round Robin Quanta
+      int cycle = 1; //Time
+      int hit = -2; //Check to see if it is a page hit
+
       Iterator<P> it = allp.iterator();
-      FrameT[] frametable = new FrameT[num]; //create a frame table to store proc
+
+      FrameT[] frametable = new FrameT[num]; //create a frame table to store proc [Proc][Proc][Proc]
       List<FrameT> FIFO = new ArrayList<FrameT>(); //First in first out
       List<FrameT> LRU = new ArrayList<FrameT>(); //Last Recently used
-      int cycle = 1; //Time
-      int hit = -2;
+
       //While terminated is not done
       while (allp.size()!=done.size()) {
         //Define curr proc
+
           P process;
-          if (!it.hasNext()) {
-              it = allp.iterator();
+          //Check if it has a next element
+          if (it.hasNext()) {
               process = it.next();
           }
           else {
-              process = it.next();
+            //else
+            it = allp.iterator();
+            process = it.next();
           }
 
           while (q != 3) {
+            //Given in notes how to calculate the current address
+            int currentAdress = (111 * process.pnum) % process.psize;
             //Quanta is not 3 then we still can run
             int pnum; //define pnum
             int tablePnum; //define table num
               if (!process.firstpass) {
                 //First time we have seen it
                   process.firstpass = true; //Set it to true
-                  process.currAdd = (111 * process.pnum) % process.psize; //Calculate pg size and how big the iterations will be
+                  process.currAdd = currentAdress; //Calculate pg size and how big the iterations will be
                   process.actualpnum = process.currAdd / process.pgsize; //Iterations
 
               }
               else {
                   //We have seen it we can iterate normally
                   process.currAdd = process.next;
+                  //Current p num
                   process.actualpnum = process.currAdd / process.pgsize;
               }
 
@@ -113,29 +123,31 @@ public class Run {
               for (int i = 0; i < frametable.length; i++) {
                 //Push away element and add the new one
                   if (frametable[i] != null ) {
-                    if(pnum ==  frametable[i].pnum){
-                      if(frametable[i].tablePnum == tablePnum){
-                     //Last recently used
-                      LRU.remove(frametable[i]);
-                      LRU.add(frametable[i]);
-                      //hit
-                      hit = 1;
+                      if(pnum ==  frametable[i].pnum){
+                          if(frametable[i].tablePnum == tablePnum){
+                             //Last recently used
+                              LRU.remove(frametable[i]);
+                              //Add to the table
+                              LRU.add(frametable[i]);
+                              //hit
+                              hit = 1;
                   }
                 }
               }
             }
 
               if (hit == 0) {
+                //Add counter for p x-1 remaning if q >3
                 process.pcounter++;
-                boolean processed = false;
+                boolean processed = false; //Check to see if we have procesed next
                 for (int i = frametable.length-1; i >= 0; i--) {
                     if (frametable[i] == null) { // If frames are free
                         FrameT temp = new FrameT(process.pgsize, i);
                         temp.free = true;
-                        temp.pnum =  process.pnum;
                         temp.tablePnum = process.actualpnum;
-                        temp.tablecurrp = process;
+                        temp.pnum =  process.pnum;
                         temp.nextpass = cycle;
+                        temp.tablecurrp = process;
                         frametable[i] = temp;
                         LRU.add(temp);
                         FIFO.add(temp);
@@ -245,12 +257,9 @@ public class Run {
                 System.out.println("Faults for process " + process.pnum + " is " + process.pcounter);
                 System.out.println("Average Residency " + " is " + averageResidency);
                 totalAverage += averageResidency;
-
             }
           faultsFinalNum += process.pcounter;
-
       }
-
     }
     //Print given
     public static void printGiven(  int machine_sizex, int page_sizex, int proc_sizex,int job_mixx,int  num_refx, String algo_namex, int debug_levelx){
@@ -293,7 +302,6 @@ public class Run {
         }
 
     }
-
 
 
 }
