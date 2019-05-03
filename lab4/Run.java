@@ -139,6 +139,10 @@ public class Run {
                         tableEnter( temp,  process,  cycle);
                         FIFO.add(temp);
                       }
+                      else{
+                        System.out.println("That algo does not exist");
+                        System.exit(1);
+                      }
 
                   }
                 }
