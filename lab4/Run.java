@@ -13,14 +13,14 @@ public class Run {
     public static ArrayList<Integer> randomList = new ArrayList<Integer>();
     //User input
 
-    public static String algo_name = "noalgo";
-    public static int machine_size = 0;
-    public static int page_size = 0;
-    public static int proc_size = 0;
-    public static int job_mix = 0;
-    public static int num_ref = 0;
-    public static int debug_level = 0;
-    public static int num = 0;
+    public static String algo_name = "noalgo"; //Algo name
+    public static int machine_size = 0; //Machine Size
+    public static int page_size = 0; //Page Size
+    public static int proc_size = 0; //Process Size
+    public static int job_mix = 0; //Job Mix
+    public static int num_ref = 0; //Refernce number
+    public static int debug_level = 0; //debug level
+    public static int num = 0; //num we are at
 
     //Begin
     public static void main (String args[]) throws IOException {
