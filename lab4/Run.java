@@ -1,13 +1,15 @@
 import java.util.*;
 import java.io.*;
 public class Run {
-    public static ArrayList<Integer> randomList = new ArrayList<Integer>();
-    public static List<P> allp = new ArrayList<P>();
+
     public static int totalAverage = 0;
     public static int totalEvicted = 0;
     public static int totalResFinalNum = 0;
     public static int faultsFinalNum = 0;
+
     public static List<P> done = new ArrayList<P>();
+    public static List<P> allp = new ArrayList<P>();
+    public static ArrayList<Integer> randomList = new ArrayList<Integer>();
 
     public static void main (String args[]) throws IOException {
       //Define what will be read from user
@@ -23,19 +25,19 @@ public class Run {
 
         //Read random file Scanner
         try{
-            Scanner ran = new Scanner(new FileInputStream("random-numbers"));
+            Scanner ran = new Scanner(new FileInputStream("random-numbers.txt"));
             while(ran.hasNextInt()){
               randomList.add(ran.nextInt());
             }
           }catch(Error E){
-            System.out.println("Error with Random files txt");
+            System.out.println("Error with Random files txt :c");
           }
         //read user input
 
         try{
       // /10 10 20 1 10 lru
       if(args.length != 7){
-        System.out.println("Too little arguments :( ");
+        System.out.println("Too little arguments :c ");
       }
       else{
       machine_size = Integer.parseInt(args[0]);
@@ -58,13 +60,15 @@ public class Run {
       printGiven(machine_size,page_size,proc_size,job_mix, num_ref, algo_name,debug_level);
       //Determing job mix level
       jobMixlevel(job_mix, num_ref, proc_size, page_size);
+
       //--Start of evictions and iterations---/
         int q = 0; //Round Robin Quanta
         Iterator<P> it = allp.iterator();
         FrameT[] frametable = new FrameT[num]; //create a frame table to store proc
-        List<FrameT> FIFO = new ArrayList<FrameT>(); //Last in first out (implements stack)
+        List<FrameT> FIFO = new ArrayList<FrameT>(); //First in first out
         List<FrameT> LRU = new ArrayList<FrameT>(); //Last Recently used
         int cycle = 1; //Time
+
         //While terminated is not done
         while (allp.size()!=done.size()) {
             P process;
@@ -75,21 +79,27 @@ public class Run {
             else {
                 process = it.next();
             }
-            while (q != 3) {
 
+            while (q != 3) {
+              int pnum;
+              int tablePnum;
                 if (!process.firstpass) {
-                    process.firstpass = true;
-                    process.currAdd = (111 * process.pnum) % process.psize;
-                    process.actualpnum = process.currAdd / process.pgsize;
+                  //First time we have seen it
+                    process.firstpass = true; //Set it to true
+                    process.currAdd = (111 * process.pnum) % process.psize; //Calculate pg size and how big the iterations will be
+                    process.actualpnum = process.currAdd / process.pgsize; //Iterations
 
                 }
                 else {
+                  //We have seen it we can iterate normally
                     process.currAdd = process.next;
                     process.actualpnum = process.currAdd / process.pgsize;
                 }
-                int pnum = process.pnum;
-                int tablePnum = process.actualpnum;
-                hit = 0;
+
+                pnum = process.pnum; //Set it to current P number
+                tablePnum = process.actualpnum; //Update Table
+                hit = 0; //Say it was a hit
+
                 for (int i = 0; i < frametable.length; i++) {
                     if (frametable[i] != null ) {
                       if(pnum ==  frametable[i].pnum && frametable[i].tablePnum == tablePnum){
@@ -146,26 +156,11 @@ public class Run {
 
                   }
                 }
-                int r = randomList.get(0);
-                randomList.remove(0);
-                double y = r / (Integer.MAX_VALUE + 1d);
-                if (y < process.a) {
-                    process.next = (process.currAdd + 1) % process.psize;
-                }
-                else if (y < process.a + process.b) {
-                    process.next = (process.currAdd - 5 + process.psize) % process.psize;
-                }
-                else if (y < process.a + process.b + process.c) {
-                    process.next = (process.currAdd + 4) % process.psize;
-                }
-                else {
-                    r = randomList.get(0);
-                    randomList.remove(0);
-                    process.next = r % process.psize;
-                }
+                victimEvict( process); //Choose a victim to evict based on specs
                 q++;
                 cycle++;
                 process.refcurr++;
+
                 if (process.refcurr == process.refnum) {
                     done.add(process);
                     q = 3;
@@ -177,7 +172,25 @@ public class Run {
         overall();
 
     }
-
+    public static void victimEvict(P process){
+      int r = randomList.get(0);
+      randomList.remove(0);
+      double y = r / (Integer.MAX_VALUE + 1d);
+      if (y < process.a) {
+          process.next = (process.currAdd + 1) % process.psize;
+      }
+      else if (y < process.a + process.b) {
+          process.next = (process.currAdd - 5 + process.psize) % process.psize;
+      }
+      else if (y < process.a + process.b + process.c) {
+          process.next = (process.currAdd + 4) % process.psize;
+      }
+      else {
+          r = randomList.get(0);
+          randomList.remove(0);
+          process.next = r % process.psize;
+      }
+    }
     public static void tableEnter(FrameT temp, P process, int cycle){
       int residency = cycle - temp.nextpass;
       temp.tablecurrp.victims ++;
@@ -189,7 +202,6 @@ public class Run {
       temp.nextpass = cycle;
     }
     public static void overall(){
-    //  totalAverage = totalResFinalNum / (int)totalEvicted;
       if (totalEvicted == 0) {
           System.out.println("Total number of faults is " + faultsFinalNum + ".");
           System.out.println("No evcitions: the overall average residency is undefined.");
@@ -197,13 +209,13 @@ public class Run {
       }
       else {
           totalAverage = totalResFinalNum / (int)totalEvicted;
-          System.out.println("Total number of faults is " + faultsFinalNum + " and the overall average residency is " + totalAverage + ".");
+          System.out.println("Total number of faults is " + faultsFinalNum + " and the overall average residency is " + totalAverage );
       }
     }
     public static void sections(){
       for (P process : done) {
           if (process.victims == 0) {
-              System.out.println("P " + process.pnum + " had " + process.pcounter + " faults.");
+              System.out.println("Process " + process.pnum + " had " + process.pcounter + " faults.");
               System.out.println("No evictions: the average residency is none.");
               totalResFinalNum += process.restime;
           }
@@ -257,7 +269,7 @@ public class Run {
               allp.add(new P(num_ref, proc_size, page_size, 4, 0.5, 0.125, 0.125));
           }
         else{
-          System.out.println("Wrong Job Mix, Try again :( ");
+          System.out.println("Wrong Job Mix, Try again :c ");
 
         }
 
