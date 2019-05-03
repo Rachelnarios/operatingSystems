@@ -79,8 +79,8 @@ public class Run {
       int q = 0; //Round Robin Quanta
       int cycle = 1; //Time
       int hit = -2; //Check to see if it is a page hit
+      ListIterator<P> it = allp.listIterator();      //Links and iterates
 
-      Iterator<P> it = allp.iterator();
 
       FrameT[] frametable = new FrameT[num]; //create a frame table to store proc [Proc][Proc][Proc]
       List<FrameT> FIFO = new ArrayList<FrameT>(); //First in first out
@@ -97,7 +97,7 @@ public class Run {
           }
           else {
             //else
-            it = allp.iterator();
+            it = allp.listIterator();
             process = it.next();
           }
 
@@ -282,7 +282,6 @@ public class Run {
       if(job_mix == 1){
         //double a,double b,double c,int num_ref,int page_size,int firstnumber ,int proc_size
               allp.add(new P(1, 0, 0, num_ref, page_size, 1, proc_size));
-            //  allp.add(new P(num_ref, proc_size, page_size, 1, 1, 0, 0));
 
           }
       else if(job_mix == 2){
@@ -308,7 +307,9 @@ public class Run {
             allp.add(new P(0.5, 0.125, 0.125, num_ref, page_size, 4, proc_size));
           }
         else{
-          System.out.println("Wrong Job Mix, Try again :c ");
+          //Error catch
+          System.out.println("Wrong Job Mix  :c ");
+          System.exit(1);
 
         }
 
