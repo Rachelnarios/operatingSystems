@@ -280,26 +280,32 @@ public class Run {
     //Determine job mix
     public static void jobMixlevel(int job_mix, int num_ref, int proc_size, int page_size){
       if(job_mix == 1){
-              allp.add(new P(num_ref, proc_size, page_size, 1, 1, 0, 0));
+        //double a,double b,double c,int num_ref,int page_size,int firstnumber ,int proc_size
+              allp.add(new P(1, 0, 0, num_ref, page_size, 1, proc_size));
+            //  allp.add(new P(num_ref, proc_size, page_size, 1, 1, 0, 0));
+
           }
       else if(job_mix == 2){
-              allp.add(new P(num_ref, proc_size, page_size, 1, 1, 0, 0));
-              allp.add(new P(num_ref, proc_size, page_size, 2, 1, 0, 0));
-              allp.add(new P(num_ref, proc_size, page_size, 3, 1, 0, 0));
-              allp.add(new P(num_ref, proc_size, page_size, 4, 1, 0, 0));
+              allp.add(new P(1, 0, 0, num_ref, page_size, 1, proc_size));
+              allp.add(new P(1, 0, 0, num_ref, page_size, 2, proc_size));
+              allp.add(new P(1, 0, 0, num_ref, page_size, 3, proc_size));
+              allp.add(new P(1, 0, 0, num_ref, page_size, 4, proc_size));
+
           }
       else if(job_mix == 3){
 
-              allp.add(new P(num_ref, proc_size, page_size, 1, 0, 0, 0));
-              allp.add(new P(num_ref, proc_size, page_size, 2, 0, 0, 0));
-              allp.add(new P(num_ref, proc_size, page_size, 3, 0, 0, 0));
-              allp.add(new P(num_ref, proc_size, page_size, 4, 0, 0, 0));
+        allp.add(new P(0, 0, 0, num_ref, page_size, 1, proc_size));
+        allp.add(new P(1, 0, 0, num_ref, page_size, 2, proc_size));
+        allp.add(new P(1, 0, 0, num_ref, page_size, 3, proc_size));
+        allp.add(new P(1, 0, 0, num_ref, page_size, 4, proc_size));
+
+
           }
           else if(job_mix == 4){
-              allp.add(new P(num_ref, proc_size, page_size, 1, 0.75, 0.25, 0));
-              allp.add(new P(num_ref, proc_size, page_size, 2, 0.75, 0, 0.25));
-              allp.add(new P(num_ref, proc_size, page_size, 3, 0.75, 0.125, 0.125));
-              allp.add(new P(num_ref, proc_size, page_size, 4, 0.5, 0.125, 0.125));
+            allp.add(new P(0.75, 0.25, 0, num_ref, page_size, 1, proc_size));
+            allp.add(new P(0.75, 0, 0.25, num_ref, page_size, 2, proc_size));
+            allp.add(new P(0.75, 0.125, 0.125, num_ref, page_size, 3, proc_size));
+            allp.add(new P(0.5, 0.125, 0.125, num_ref, page_size, 4, proc_size));
           }
         else{
           System.out.println("Wrong Job Mix, Try again :c ");
