@@ -65,7 +65,7 @@ public class Run {
         while (processList.size()!=terminatedList.size()) {
 
             P p;
-            if (!it.hasNext()) { // Iterate through processes. If there is no next P, go back to beginning.
+            if (!it.hasNext()) {
                 it = processList.iterator();
                 p = it.next();
             }
@@ -97,11 +97,10 @@ public class Run {
                   }
                 }
                 if (hit == 0) {
-                  p.  pcounter++; // Increment page fault counter
+                  p.  pcounter++;
                   boolean processed = false;
                   for (int i = frameTable.length-1; i >= 0; i--) {
                       if (frameTable[i] == null) { // If frames are free
-                          // System.out.println("Page Fault. Using free frame " + i + " for initial loading");
                           FrameT temp = new FrameT(p.pgsize, i);
                           temp.free = true;
                           temp.pnum =  p.pnum;
@@ -116,13 +115,11 @@ public class Run {
                       }
                   }
                   if (!processed) {
-                      // Evict a frame depending on algorithm
-                      if (algo_name.equalsIgnoreCase("lru")) { // Determine which frame is the least recently used
+                      if (algo_name.equalsIgnoreCase("lru")) {
                           FrameT temp = LRU.get(0);
                           LRU.remove(0);
                           int residency = cycle - temp.nextpass;
-                              // Add residency to P
-                          temp.tablecurrp.victims ++; // Increment victims to calculate average residency
+                          temp.tablecurrp.victims ++;
                           temp.tablecurrp.restime += residency;
                           temp.free = true;
                           temp.pnum =  p.pnum;
@@ -137,7 +134,7 @@ public class Run {
                           int i = r % frameTable.length;
                           FrameT temp = frameTable[i];
                           int residency = cycle - temp.nextpass;
-                          temp.tablecurrp.victims ++; // Increment victims to calculate average residency
+                          temp.tablecurrp.victims ++;
                           temp.tablecurrp.restime += residency;
                           temp.free = true;
                           temp.pnum =  p.pnum;
@@ -148,7 +145,7 @@ public class Run {
                       else if (algo_name.equalsIgnoreCase("lifo")) {
                           FrameT temp = LIFO.peek();
                           int residency = cycle - temp.nextpass;
-                          temp.tablecurrp.victims ++; // Increment victims to calculate average residency
+                          temp.tablecurrp.victims ++;
                           temp.tablecurrp.restime += residency;
                           temp.free = true;
                           temp.pnum =  p.pnum;
@@ -182,7 +179,7 @@ public class Run {
                 cycle++;
                 q++;
                 p.refcurr++;
-                if (p.refcurr == p.refnum) { // Will return true if number of references is reached
+                if (p.refcurr == p.refnum) { 
                     terminatedList.add(p);
                     q = 3;
 
