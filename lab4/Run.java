@@ -2,23 +2,25 @@ import java.util.*;
 import java.io.*;
 public class Run {
     public static ArrayList<Integer> randomList = new ArrayList<Integer>();
-    public static List<P> processList = new ArrayList<P>();
-    public static int overallAverageResidency = 0;
-    public static int totalvictims = 0;
-    public static int totalResidency = 0;
-    public static int totalFaults = 0;
-    public static List<P> terminatedList = new ArrayList<P>();
+    public static List<P> allp = new ArrayList<P>();
+    public static int totalAverage = 0;
+    public static int totalEvicted = 0;
+    public static int totalResFinalNum = 0;
+    public static int faultsFinalNum = 0;
+    public static List<P> done = new ArrayList<P>();
 
     public static void main (String args[]) throws IOException {
+      //Define what will be read from user
+        String algo_name = "noalgo";
         int hit = -2;
         int machine_size = 0;
         int page_size = 0;
         int proc_size = 0;
         int job_mix = 0;
         int num_ref = 0;
-        String algo_name = null;
         int debug_level = 0;
-        int numOfPages = 0;
+        int num = 0;
+
         //Read random file Scanner
         try{
             Scanner ran = new Scanner(new FileInputStream("random-numbers"));
@@ -44,7 +46,7 @@ public class Run {
       algo_name = args[5] ;
     //  System.out.println(algo_name);
       debug_level = Integer.parseInt(args[6]) ;
-       numOfPages = machine_size / page_size;
+       num = machine_size / page_size;
 
       }
 
@@ -52,20 +54,22 @@ public class Run {
     catch(Error e){
       System.out.println(e);
       }
-
+      //Print what was given by input
       printGiven(machine_size,page_size,proc_size,job_mix, num_ref, algo_name,debug_level);
+      //Determing job mix level
       jobMixlevel(job_mix, num_ref, proc_size, page_size);
-
-        int q = 0;
-        Iterator<P> it = processList.iterator();
-        FrameT[] frameTable = new FrameT[numOfPages];
-        List<FrameT> LRU = new ArrayList<FrameT>();
-        Stack<FrameT> LIFO = new Stack<FrameT>();
-        int cycle = 1;
-        while (processList.size()!=terminatedList.size()) {
+      //--Start of evictions and iterations---/
+        int q = 0; //Round Robin Quanta
+        Iterator<P> it = allp.iterator();
+        FrameT[] frametable = new FrameT[num]; //create a frame table to store proc
+        Stack<FrameT> LIFO = new Stack<FrameT>(); //Last in first out (implements stack)
+        List<FrameT> LRU = new ArrayList<FrameT>(); //Last Recently used
+        int cycle = 1; //Time
+        //While terminated is not done
+        while (allp.size()!=done.size()) {
             P process;
             if (!it.hasNext()) {
-                it = processList.iterator();
+                it = allp.iterator();
                 process = it.next();
             }
             else {
@@ -86,11 +90,11 @@ public class Run {
                 int pnum = process.pnum;
                 int tablePnum = process.actualpnum;
                 hit = 0;
-                for (int i = 0; i < frameTable.length; i++) {
-                    if (frameTable[i] != null ) {
-                      if(pnum ==  frameTable[i].pnum && frameTable[i].tablePnum == tablePnum){
-                        LRU.remove(frameTable[i]);
-                        LRU.add(frameTable[i]);
+                for (int i = 0; i < frametable.length; i++) {
+                    if (frametable[i] != null ) {
+                      if(pnum ==  frametable[i].pnum && frametable[i].tablePnum == tablePnum){
+                        LRU.remove(frametable[i]);
+                        LRU.add(frametable[i]);
                         hit = 1;
                     }
                   }
@@ -98,15 +102,15 @@ public class Run {
                 if (hit == 0) {
                   process.  pcounter++;
                   boolean processed = false;
-                  for (int i = frameTable.length-1; i >= 0; i--) {
-                      if (frameTable[i] == null) { // If frames are free
+                  for (int i = frametable.length-1; i >= 0; i--) {
+                      if (frametable[i] == null) { // If frames are free
                           FrameT temp = new FrameT(process.pgsize, i);
                           temp.free = true;
                           temp.pnum =  process.pnum;
                           temp.tablePnum = process.actualpnum;
                           temp.tablecurrp = process;
                           temp.nextpass = cycle;
-                          frameTable[i] = temp;
+                          frametable[i] = temp;
                           LRU.add(temp);
                           LIFO.add(temp);
                           processed = true;
@@ -124,8 +128,8 @@ public class Run {
                       else if (algo_name.equals("random")) {
                           int r = randomList.get(0);
                           randomList.remove(0);
-                          int i = r % frameTable.length;
-                          FrameT temp = frameTable[i];
+                          int i = r % frametable.length;
+                          FrameT temp = frametable[i];
                           tableEnter( temp,  process,  cycle);
                       }
                       else if (algo_name.equals("lifo")) {
@@ -139,7 +143,6 @@ public class Run {
                 int r = randomList.get(0);
                 randomList.remove(0);
                 double y = r / (Integer.MAX_VALUE + 1d);
-
                 if (y < process.a) {
                     process.next = (process.currAdd + 1) % process.psize;
                 }
@@ -154,15 +157,12 @@ public class Run {
                     randomList.remove(0);
                     process.next = r % process.psize;
                 }
-
-                cycle++;
                 q++;
+                cycle++;
                 process.refcurr++;
                 if (process.refcurr == process.refnum) {
-                    terminatedList.add(process);
+                    done.add(process);
                     q = 3;
-
-
                 }
             }
             q = 0;
@@ -183,35 +183,36 @@ public class Run {
       temp.nextpass = cycle;
     }
     public static void overall(){
-      if (totalvictims == 0) {
-          System.out.println("\nThe total number of faults is " + totalFaults + ".");
-          System.out.println("\tWith no victims, the overall average residency is undefined.");
+    //  totalAverage = totalResFinalNum / (int)totalEvicted;
+      if (totalEvicted == 0) {
+          System.out.println("Total number of faults is " + faultsFinalNum + ".");
+          System.out.println("No evcitions: the overall average residency is undefined.");
 
       }
       else {
-          overallAverageResidency = totalResidency / (int)totalvictims;
-          System.out.println("\nThe total number of faults is " + totalFaults + " and the overall average residency is " + overallAverageResidency + ".");
+          totalAverage = totalResFinalNum / (int)totalEvicted;
+          System.out.println("Total number of faults is " + faultsFinalNum + " and the overall average residency is " + totalAverage + ".");
       }
     }
     public static void sections(){
-      for (P process : terminatedList) {
+      for (P process : done) {
           if (process.victims == 0) {
               System.out.println("P " + process.pnum + " had " + process.pcounter + " faults.");
               System.out.println("No evictions: the average residency is none.");
-              totalResidency += process.restime;
+              totalResFinalNum += process.restime;
           }
             else {
                 int averageResidency = process.restime / (int)process.victims;
-                totalvictims += process.victims;
-                totalResidency += process.restime;
+                totalEvicted += process.victims;
+                totalResFinalNum += process.restime;
                 System.out.println("Faults for process " + process.pnum + " is " + process.pcounter);
                 System.out.println("Average Residency " + " is " + averageResidency);
-                overallAverageResidency += averageResidency;
+                totalAverage += averageResidency;
 
             }
 
 
-          totalFaults += process.pcounter;
+          faultsFinalNum += process.pcounter;
 
       }
 
@@ -221,33 +222,33 @@ public class Run {
       System.out.println("The page size is " + page_sizex);
       System.out.println("The process size is " + proc_sizex);
       System.out.println("The job mix number is " + job_mixx);
-      System.out.println("The number of references per P is " + num_refx);
+      System.out.println("The number of references per process is " + num_refx);
       System.out.println("The replacement algorithm is " + algo_namex );
       System.out.println("The level of debugging output is "+ debug_levelx + "\n");
 
     }
     public static void jobMixlevel(int job_mix, int num_ref, int proc_size, int page_size){
       if(job_mix == 1){
-              processList.add(new P(num_ref, proc_size, page_size, 1, 1, 0, 0));
+              allp.add(new P(num_ref, proc_size, page_size, 1, 1, 0, 0));
           }
       else if(job_mix == 2){
-              processList.add(new P(num_ref, proc_size, page_size, 1, 1, 0, 0));
-              processList.add(new P(num_ref, proc_size, page_size, 2, 1, 0, 0));
-              processList.add(new P(num_ref, proc_size, page_size, 3, 1, 0, 0));
-              processList.add(new P(num_ref, proc_size, page_size, 4, 1, 0, 0));
+              allp.add(new P(num_ref, proc_size, page_size, 1, 1, 0, 0));
+              allp.add(new P(num_ref, proc_size, page_size, 2, 1, 0, 0));
+              allp.add(new P(num_ref, proc_size, page_size, 3, 1, 0, 0));
+              allp.add(new P(num_ref, proc_size, page_size, 4, 1, 0, 0));
           }
       else if(job_mix == 3){
 
-              processList.add(new P(num_ref, proc_size, page_size, 1, 0, 0, 0));
-              processList.add(new P(num_ref, proc_size, page_size, 2, 0, 0, 0));
-              processList.add(new P(num_ref, proc_size, page_size, 3, 0, 0, 0));
-              processList.add(new P(num_ref, proc_size, page_size, 4, 0, 0, 0));
+              allp.add(new P(num_ref, proc_size, page_size, 1, 0, 0, 0));
+              allp.add(new P(num_ref, proc_size, page_size, 2, 0, 0, 0));
+              allp.add(new P(num_ref, proc_size, page_size, 3, 0, 0, 0));
+              allp.add(new P(num_ref, proc_size, page_size, 4, 0, 0, 0));
           }
           else if(job_mix == 4){
-              processList.add(new P(num_ref, proc_size, page_size, 1, 0.75, 0.25, 0));
-              processList.add(new P(num_ref, proc_size, page_size, 2, 0.75, 0, 0.25));
-              processList.add(new P(num_ref, proc_size, page_size, 3, 0.75, 0.125, 0.125));
-              processList.add(new P(num_ref, proc_size, page_size, 4, 0.5, 0.125, 0.125));
+              allp.add(new P(num_ref, proc_size, page_size, 1, 0.75, 0.25, 0));
+              allp.add(new P(num_ref, proc_size, page_size, 2, 0.75, 0, 0.25));
+              allp.add(new P(num_ref, proc_size, page_size, 3, 0.75, 0.125, 0.125));
+              allp.add(new P(num_ref, proc_size, page_size, 4, 0.5, 0.125, 0.125));
           }
         else{
           System.out.println("Wrong Job Mix, Try again :( ");
