@@ -5,7 +5,7 @@ The driver uses
 round robin scheduling with quantum q=3 (i.e., 3 references for process 1, then 3 for process 2, etc.).
 
 # Commands
-To run: javac Run.javac -> java Run M P S J N R D-> EG: java run 10 10 20 1 10 lru 0
+To run: javac Run.javac -> java Run M P S J N R D-> EG: java Run 10 10 20 1 10 lru 0
 
 The program is invoked with 6 command line arguments
 ``` 6 positive integers and one string

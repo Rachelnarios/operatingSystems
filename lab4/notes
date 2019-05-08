@@ -4,7 +4,7 @@ Number
 3	10 10 10 2 10 lru 0 : GUD fix rounding
 4	20 10 10 2 10 lru 0 : GUD fix rounding
 5	20 10 10 2 10 random 0 : gud
-6	20 10 10 2 10 fifo 0 : :c Fifo is broken
+6	20 10 10 2 10 fifo 0 : :c  is broken
 7	20 10 10 3 10 lru 0: gud
 8	20 10 10 3 10 fifo 0 :c
 ==========

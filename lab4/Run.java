@@ -31,17 +31,17 @@ public class Run {
               randomList.add(ran.nextInt());
             }
           }catch(Error E){
-            System.out.println("Error with Random files txt :c");
+            System.out.println("Error with Random files txt ʕ　·ᴥ·ʔ ");
           }
         //read user input
 
         try{
           //User gave wrong args
           if(args.length < 6){
-            System.out.println("Too little arguments :c ");
+            System.out.println("Too little arguments ʕ　·ᴥ·ʔ ");
             System.exit(1);
       }else if(args.length > 7){
-        System.out.println("Too MANY arguments :c ");
+        System.out.println("Too MANY arguments ʕﾉಠᴥಠʔﾉ ");
         System.exit(1);
 
       }
@@ -72,6 +72,8 @@ public class Run {
         sections();
         //Print overall stats
         overall();
+        //   //Print end of program
+        // printdone();
 
     }
     public static void start(){
@@ -144,7 +146,7 @@ public class Run {
                 process.pcounter++;
                 boolean processed = false; //Check to see if we have procesed next
                 for (int i = frametable.length-1; i >= 0; i--) {
-                    if (frametable[i] == null) { // If frames are free
+                    if (frametable[i] == null) { // If frames are free do whole dance of adding
                         FrameT temp = new FrameT(process.pgsize, i);
                         temp.free = true;
                         temp.tablePnum = process.actualpnum;
@@ -182,7 +184,7 @@ public class Run {
                         tableEnter( temp,  process,  cycle);
                     }
                     else{
-                      System.out.println("That algo does not exist");
+                      System.out.println("That algo does not exist ʕ　·ᴥ·ʔ");
                       System.exit(1);
                     }
 
@@ -266,7 +268,7 @@ public class Run {
     }
     //Print given
     public static void printGiven(  int machine_sizex, int page_sizex, int proc_sizex,int job_mixx,int  num_refx, String algo_namex, int debug_levelx){
-      System.out.println("\n"+"The Machine Size is " + machine_sizex);
+      System.out.println("The Machine Size is " + machine_sizex);
       System.out.println("The page size is " + page_sizex);
       System.out.println("The process size is " + proc_sizex);
       System.out.println("The job mix number is " + job_mixx);
@@ -275,7 +277,10 @@ public class Run {
       System.out.println("The level of debugging output is "+ debug_levelx + "\n");
 
     }
-    //Determine job mix
+    public static void printdone(){
+      System.out.println("> THE END :)jA <");
+    }
+    //Determine job mix Specs given in lab
     public static void jobMixlevel(int job_mix, int num_ref, int proc_size, int page_size){
       if(job_mix == 1){
         //double a,double b,double c,int num_ref,int page_size,int firstnumber ,int proc_size
@@ -306,7 +311,7 @@ public class Run {
           }
         else{
           //Error catch
-          System.out.println("Wrong Job Mix  :c ");
+          System.out.println("Wrong Job Mix ʕﾉಠᴥಠʔﾉ ");
           System.exit(1);
 
         }

@@ -14,7 +14,7 @@ public class P {
   public int restime; //Time we have been in algo
   public int victims; //Number of Proc that have been evicted "They are victims"
 
-  public double a; //Calculates skips / Which page we access nexy
+  public double a; //Calculates skips / Which page we access next
   public double b; //2ND var to calculate skip
   public double c; //3rd var to calculate skip
 
